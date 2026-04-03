@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  文件：index.html
+  作用：网页的骨架（HTML 结构）
+  ============================================================
+
+  这个文件定义了页面的所有 HTML 元素。
+  它本身不包含逻辑，逻辑由 src/main.js 及其引用的模块处理。
+
+  页面结构：
+  ┌─────────────────────────────────────┐
+  │  顶部栏 (header#topbar)              │  ← Logo + 蓝牙状态按钮
+  ├─────────────────────────────────────┤
+  │                                     │
+  │  画布区域 (main#canvas-area)         │  ← 用户在这里触摸材质贴纸
+  │    └── 画布 (div#canvas)            │
+  │          └── 空白提示 (#empty-hint) │
+  │                                     │
+  ├──────────────────────────────────[▶]│  ← 三角按钮 (button#drawer-toggle)
+  └─────────────────────────────────────┘
+       │
+       │ 点击后从右侧滑入：
+       ▼
+  ┌──────────────────┐
+  │ 材质库 (aside)   │  ← 材质贴纸网格 + 模板列表
+  └──────────────────┘
+  ============================================================
+-->
+<html lang="zh">
+<head>
+  <!-- 字符编码：UTF-8 支持中文和 Emoji -->
+  <meta charset="UTF-8" />
+
+  <!--
+    视口设置（移动端适配）：
+    width=device-width  : 宽度等于设备屏幕宽度（不缩放）
+    initial-scale=1.0   : 初始缩放比例 1:1
+    user-scalable=no    : 禁止用户手动缩放（防止双击放大干扰触摸操作）
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+  <!--
+    iOS 全屏 Web App 设置（添加到主屏幕后以全屏运行，没有浏览器地址栏）
+    apple-mobile-web-app-capable  : 启用全屏模式
+    apple-mobile-web-app-status-bar-style : 状态栏样式（黑色半透明）
+  -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <title>Surface Pulse</title>
+
+  <!-- 引入全局样式表 -->
+  <link rel="stylesheet" href="/src/styles/main.css" />
+</head>
+<body>
+
+  <!-- 整个应用的根容器 -->
+  <div id="app">
+
+    <!-- ── 顶部栏 ───────────────────────────────────────────────────────── -->
+    <!--
+      固定在顶部，包含：
+      - 左侧：Logo（闪烁圆点 + 文字"Surface Pulse"）
+      - 右侧：蓝牙连接状态按钮（点击可连接/断开）
+    -->
+    <header id="topbar">
+
+      <!-- Logo 区域 -->
+      <div class="logo">
+        <!-- 跳动的小圆点（CSS 动画，代表脉冲/振动感） -->
+        <span class="logo-dot"></span>
+        <span class="logo-text">Surface Pulse</span>
+      </div>
+
+      <!--
+        蓝牙状态按钮
+        - id="ble-status"    : JS 操作的目标（更换 CSS 类来改颜色）
+        - class disconnected : 初始状态为"未连接"（灰色）
+        - title              : 鼠标悬停时的提示文字
+        - 点击事件在 main.js 里绑定
+      -->
+      <div id="ble-status" class="ble-status disconnected" title="点击连接/断开蓝牙">
+
+        <!-- 蓝牙图标（SVG 矢量图，任何尺寸都清晰） -->
+        <svg class="ble-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6.5 6.5l11 11M17.5 6.5L12 12l5.5 5.5M12 3v18M6.5 17.5l5.5-5.5"/>
+        </svg>
+
+        <!-- 状态文字（由 main.js 动态更新） -->
+        <span id="ble-label">未连接</span>
+      </div>
+    </header>
+
+    <!-- ── 画布区域 ──────────────────────────────────────────────────────── -->
+    <!--
+      占据剩余全部屏幕高度（flex: 1）。
+      用户在这里拖入材质贴纸，然后用手指/鼠标触摸体验。
+    -->
+    <main id="canvas-area">
+
+      <!--
+        真正的画布元素
+        data-material="none" : 初始状态，没有触碰任何材质（调试用，JS 不读取这个属性）
+        触摸事件监听在 TouchDetector.js 里绑定到这个元素
+      -->
+      <div id="canvas" data-material="none">
+
+        <!--
+          空白提示（当画布上没有任何贴纸时显示）
+          当用户添加第一个贴纸后，Canvas.js 会给它加 "hidden" 类使其消失
+        -->
+        <div id="empty-hint">
+          <p>拖入材质开始体验</p>
+          <p class="hint-sub">或点击右侧 ▶ 打开材质库</p>
+        </div>
+
+        <!-- 材质贴纸由 Canvas.js 动态插入这里（MaterialSticker.js 创建） -->
+      </div>
+    </main>
+
+    <!-- ── 三角形抽屉开关按钮 ─────────────────────────────────────────────── -->
+    <!--
+      固定在屏幕右侧中间，形状像个向右的三角形（▶）。
+      点击后打开材质库抽屉，抽屉打开后三角旋转 180° 变成向左（◀）。
+      点击事件在 MaterialDrawer.js 里绑定。
+    -->
+    <button id="drawer-toggle" aria-label="打开材质库">
+      <!-- 三角形 SVG 图标 -->
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <polygon points="6,3 20,12 6,21"/>
+      </svg>
+    </button>
+
+    <!-- ── 材质库抽屉 ─────────────────────────────────────────────────────── -->
+    <!--
+      <aside> 是 HTML 语义标签，表示"侧边内容"。
+      aria-hidden="true" : 初始状态隐藏（对屏幕阅读器不可见）
+      打开时 MaterialDrawer.js 会改为 aria-hidden="false"
+      CSS transform: translateX(100%) 默认把它推到屏幕右边外面，
+      添加 .open 类后 translateX(0) 滑入屏幕。
+    -->
+    <aside id="material-drawer" aria-hidden="true">
+
+      <!-- 抽屉头部：标题 + 关闭按钮 -->
+      <div class="drawer-header">
+        <h2>材质库</h2>
+        <button id="drawer-close" aria-label="关闭抽屉">✕</button>
+      </div>
+
+      <!-- 材质贴纸区域 -->
+      <section class="drawer-section">
+        <h3>材质贴纸</h3>
+        <!--
+          材质网格容器（3列网格布局）
+          内容由 MaterialDrawer.js 的 _buildPalette() 方法动态填充
+        -->
+        <div id="material-palette" class="material-grid">
+          <!-- 例：<div class="palette-item">🪟 玻璃</div> -->
+        </div>
+      </section>
+
+      <!-- 模板区域 -->
+      <section class="drawer-section">
+        <h3>模板</h3>
+        <!--
+          模板列表容器
+          内容由 MaterialDrawer.js 的 _buildTemplates() 方法动态填充
+        -->
+        <div id="template-list" class="template-grid">
+          <!-- 例：<div class="template-card">基础材质</div> -->
+        </div>
+      </section>
+    </aside>
+
+    <!-- ── 遮罩层 ────────────────────────────────────────────────────────── -->
+    <!--
+      抽屉打开时显示在抽屉后面、画布前面的半透明黑色遮罩。
+      点击遮罩可以关闭抽屉（比找关闭按钮更方便）。
+      CSS 控制：opacity: 0（隐藏）↔ opacity: 1（显示）
+    -->
+    <div id="drawer-overlay"></div>
+
+    <!-- ── 触点指示器 ─────────────────────────────────────────────────────── -->
+    <!--
+      手指/鼠标按下时，在触点位置显示的视觉反馈。
+      包含：一个大小随接触面积变化的圆圈 + 当前材质名称标签。
+      位置由 Canvas.js 的 _showIndicator() 方法动态设置。
+      pointer-events: none : 不拦截触摸/鼠标事件（保证触摸操作能穿透它）
+    -->
+    <div id="touch-indicator" aria-hidden="true">
+      <!-- 触点圆圈（大小随手指接触面积动态变化） -->
+      <div class="touch-ring"></div>
+      <!-- 材质名称标签（例如"玻璃"） -->
+      <span id="touch-material-label"></span>
+    </div>
+
+  </div><!-- /#app -->
+
+  <!--
+    引入 JS 入口文件
+    type="module" : 告诉浏览器这是 ES Module，支持 import/export 语法。
+    Vite 开发服务器会自动处理模块依赖，生产构建时会打包成单文件。
+  -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

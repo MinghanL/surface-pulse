@@ -1,0 +1,618 @@
+/*
+ * ============================================================
+ * 文件：main.css
+ * 作用：全局样式（布局、颜色、动画、组件外观）
+ * ============================================================
+ *
+ * 文件结构：
+ *   1. Reset & Base      ← 统一浏览器默认样式 + CSS 变量定义
+ *   2. App Layout        ← 整体弹性布局（上下排列）
+ *   3. Top Bar           ← 顶部导航栏
+ *   4. BLE Status        ← 蓝牙状态按钮
+ *   5. Canvas Area       ← 画布区域（占满剩余高度）
+ *   6. Material Sticker  ← 画布上的圆形材质贴纸
+ *   7. Drawer Toggle     ← 右侧三角按钮
+ *   8. Material Drawer   ← 右侧滑入抽屉
+ *   9. Touch Indicator   ← 触点指示圆圈
+ *  10. Material Colors   ← 各材质的颜色渐变
+ * ============================================================
+ */
+
+/* ===== 1. Reset & Base — 基础重置 ===== */
+/*
+  * 选择器：匹配所有元素及其伪元素（::before、::after）
+  box-sizing: border-box  → padding 和 border 计入元素宽高，更好计算布局
+  margin/padding: 0       → 消除浏览器默认的外边距和内边距
+  tap-highlight-color     → iOS/Android 上点击时不显示蓝色高亮框
+*/
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/*
+  :root — CSS 变量定义（全局颜色和尺寸配置）
+  使用变量的好处：修改一个地方，全站颜色同步变化。
+  变量用 var(--变量名) 引用，例如：color: var(--text);
+*/
+:root {
+  /* 背景色（深空黑） */
+  --bg: #0d0d12;
+  /* 卡片/面板表面色（略浅） */
+  --surface: #16161f;
+  /* 二级表面色（更浅，用于嵌套元素） */
+  --surface2: #1e1e2a;
+  /* 边框色（白色 8% 透明度，若隐若现的分割线） */
+  --border: rgba(255,255,255,0.08);
+  /* 主题紫色（用于强调元素） */
+  --accent: #7c6ff7;
+  /* 浅紫色（渐变、高亮） */
+  --accent2: #a78bfa;
+  /* 主要文字色（近白） */
+  --text: #e8e8f0;
+  /* 次要文字色（灰色，用于说明文字） */
+  --text-muted: #6b6b80;
+  /* 抽屉宽度 */
+  --drawer-width: 280px;
+  /* 顶部栏高度 */
+  --topbar-h: 56px;
+  /* 圆角半径 */
+  --radius: 16px;
+  /* 统一过渡动画（0.3秒，缓入缓出曲线） */
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 各材质的代表色（目前仅供参考，实际颜色用渐变实现） */
+  --mat-glass:  #a8d8ea;
+  --mat-wood:   #c8a96e;
+  --mat-metal:  #8a9bb0;
+  --mat-rubber: #6a9e78;
+  --mat-fabric: #c47eb0;
+  --mat-stone:  #9b8e85;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== App Layout ===== */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ===== Top Bar ===== */
+#topbar {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: rgba(13,13,18,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 8px var(--accent); opacity: 1; }
+  50% { box-shadow: 0 0 20px var(--accent2); opacity: 0.7; }
+}
+
+.logo-text {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  background: linear-gradient(135deg, #fff 30%, var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===== BLE Status ===== */
+.ble-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  background: var(--surface2);
+}
+
+.ble-status:active { transform: scale(0.96); }
+
+.ble-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.ble-status.disconnected {
+  color: var(--text-muted);
+}
+
+.ble-status.connected {
+  color: #4ade80;
+  border-color: rgba(74,222,128,0.3);
+  background: rgba(74,222,128,0.08);
+}
+
+.ble-status.connecting {
+  color: var(--accent2);
+  border-color: rgba(167,139,250,0.3);
+  animation: ble-blink 1s ease-in-out infinite;
+}
+
+@keyframes ble-blink {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ===== Canvas Area ===== */
+#canvas-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(124,111,247,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(167,139,250,0.04) 0%, transparent 60%),
+    var(--bg);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+}
+
+/* Subtle grid pattern */
+#canvas::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* ===== Empty Hint ===== */
+#empty-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+#empty-hint.hidden { opacity: 0; }
+
+#empty-hint p {
+  font-size: 16px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+#empty-hint .hint-sub {
+  font-size: 13px;
+  color: rgba(107,107,128,0.6);
+}
+
+/* ===== Material Sticker (on canvas) ===== */
+.material-sticker {
+  position: absolute;
+  border-radius: 50%;
+  cursor: grab;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(255,255,255,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transform-origin: center;
+}
+
+.material-sticker:active,
+.material-sticker.dragging {
+  cursor: grabbing;
+  transform: scale(1.05);
+  box-shadow:
+    0 16px 48px rgba(0,0,0,0.5),
+    0 0 0 2px rgba(255,255,255,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  z-index: 100;
+}
+
+.material-sticker.active-touch {
+  box-shadow:
+    0 0 0 4px rgba(255,255,255,0.6),
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: scale(1.08);
+}
+
+.sticker-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.sticker-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.sticker-delete {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(30,30,40,0.95);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.15s, background 0.15s;
+}
+
+.sticker-delete:hover {
+  color: #ff6b6b;
+  background: rgba(255,107,107,0.15);
+}
+
+.material-sticker:hover .sticker-delete {
+  display: flex;
+}
+
+/* ===== Material Sizes ===== */
+.material-sticker { width: 100px; height: 100px; }
+
+/* ===== Drawer Toggle Button ===== */
+#drawer-toggle {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 64px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: 12px 0 0 12px;
+  color: var(--accent2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  transition: background var(--transition), transform var(--transition), color var(--transition);
+  box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+}
+
+#drawer-toggle:active { background: var(--surface); }
+
+#drawer-toggle svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--transition);
+}
+
+#drawer-toggle.open svg {
+  transform: rotate(180deg);
+}
+
+/* ===== Material Drawer ===== */
+#material-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: var(--drawer-width);
+  height: 100dvh;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--transition);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+#material-drawer.open {
+  transform: translateX(0);
+}
+
+#material-drawer[aria-hidden="true"] {
+  visibility: hidden;
+}
+
+#material-drawer.open {
+  visibility: visible;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  margin-top: env(safe-area-inset-top);
+}
+
+.drawer-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+#drawer-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+
+#drawer-close:hover { color: var(--text); }
+
+.drawer-section {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.drawer-section h3 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+/* ===== Material Palette in Drawer ===== */
+.material-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.palette-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: grab;
+  transition: transform 0.15s;
+}
+
+.palette-item:active { transform: scale(0.95); cursor: grabbing; }
+
+.palette-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(255,255,255,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.palette-name {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Ghost clone during drag */
+.drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.85;
+  transform: scale(1.1);
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+
+/* ===== Template Grid ===== */
+.template-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.template-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.template-card:active {
+  background: rgba(124,111,247,0.1);
+  border-color: rgba(124,111,247,0.4);
+}
+
+.template-preview {
+  display: flex;
+  gap: -4px;
+}
+
+.template-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+  margin-left: -4px;
+}
+
+.template-dot:first-child { margin-left: 0; }
+
+.template-info { flex: 1; }
+
+.template-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.template-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ===== Overlay ===== */
+#drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+#drawer-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ===== Touch Indicator ===== */
+#touch-indicator {
+  position: fixed;
+  pointer-events: none;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.15s;
+}
+
+#touch-indicator.visible {
+  opacity: 1;
+}
+
+.touch-ring {
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.05);
+  transition: width 0.1s, height 0.1s;
+}
+
+#touch-material-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: rgba(13,13,18,0.8);
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* ===== Material Color Themes ===== */
+.mat-glass  { background: radial-gradient(circle at 35% 35%, rgba(168,216,234,0.9), rgba(100,180,220,0.7)); }
+.mat-wood   { background: radial-gradient(circle at 35% 35%, rgba(200,169,110,0.95), rgba(150,100,50,0.8)); }
+.mat-metal  { background: radial-gradient(circle at 35% 35%, rgba(180,196,216,0.9), rgba(100,120,150,0.7)); }
+.mat-rubber { background: radial-gradient(circle at 35% 35%, rgba(106,158,120,0.9), rgba(60,110,75,0.8)); }
+.mat-fabric { background: radial-gradient(circle at 35% 35%, rgba(196,126,176,0.9), rgba(140,70,130,0.7)); }
+.mat-stone  { background: radial-gradient(circle at 35% 35%, rgba(155,142,133,0.9), rgba(100,90,82,0.8)); }
+
+/* ===== Scrollbar ===== */
+#material-drawer::-webkit-scrollbar { width: 4px; }
+#material-drawer::-webkit-scrollbar-track { background: transparent; }
+#material-drawer::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ===== Safe area ===== */
+#canvas-area {
+  padding-bottom: env(safe-area-inset-bottom);
+}
