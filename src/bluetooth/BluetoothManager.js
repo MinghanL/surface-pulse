@@ -127,11 +127,11 @@ export class BluetoothManager {
       this._setStatus('connecting');
 
       // 弹出蓝牙设备选择器
-      // filters：只显示广播了 UART Service UUID 的设备（精确过滤）
-      // 如果调试时找不到设备，可以改为 acceptAllDevices: true
+      // acceptAllDevices: true → 显示附近所有蓝牙设备，方便找到你的 MCU
+      // optionalServices → 连接后允许访问这个服务通道（不写的话连上后会报权限错误）
       this._device = await navigator.bluetooth.requestDevice({
-        filters: [{ services: [SERVICE_UUID] }],
-        // acceptAllDevices: true, // ← 调试时取消注释，显示所有蓝牙设备
+        acceptAllDevices: true,
+        optionalServices: [SERVICE_UUID],
       });
 
       // 监听"意外断开"事件
