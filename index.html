@@ -51,8 +51,8 @@
   <title>Surface Pulse</title>
 
   <!-- 引入全局样式表 -->
-  <script type="module" crossorigin src="/surface-pulse/assets/index-BH2SEVve.js"></script>
-  <link rel="stylesheet" crossorigin href="/surface-pulse/assets/index-BSEMHt9V.css">
+  <script type="module" crossorigin src="/surface-pulse/assets/index-CfrazAx0.js"></script>
+  <link rel="stylesheet" crossorigin href="/surface-pulse/assets/index-ChGFr5DC.css">
 </head>
 <body>
 
@@ -91,7 +91,71 @@
         <!-- 状态文字（由 main.js 动态更新） -->
         <span id="ble-label">未连接</span>
       </div>
+
+      <!-- 数据监控按钮（点击后显示/隐藏左上角实时数据窗口） -->
+      <button id="monitor-toggle" title="实时数据监控">
+        <!-- 波形图标（SVG） -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="2,12 6,6 10,16 14,8 18,14 22,12"/>
+        </svg>
+      </button>
     </header>
+
+    <!-- ── 实时数据监控悬浮窗 ────────────────────────────────────────────── -->
+    <!--
+      固定在屏幕左上角的小弹窗，显示蓝牙实时传输的数据。
+      默认隐藏，点击顶部栏的波形按钮后显示/隐藏。
+      由 src/components/DataMonitor.js 控制内容更新。
+    -->
+    <div id="data-monitor" class="monitor-hidden">
+
+      <!-- 窗口标题栏 -->
+      <div class="monitor-titlebar">
+        <!-- 左侧：绿色呼吸圆点 + 标题 -->
+        <div class="monitor-title">
+          <span class="monitor-live-dot"></span>
+          <span>实时数据</span>
+        </div>
+        <!-- 右侧：清空按钮 -->
+        <button id="monitor-clear" title="清空记录">清空</button>
+      </div>
+
+      <!-- 当前触碰状态（大字显示） -->
+      <div class="monitor-current">
+        <!-- 材质名称 -->
+        <div class="monitor-field">
+          <span class="monitor-field-label">材质</span>
+          <span id="mon-material" class="monitor-field-value">—</span>
+        </div>
+        <!-- 接触面积 -->
+        <div class="monitor-field">
+          <span class="monitor-field-label">面积</span>
+          <span id="mon-area" class="monitor-field-value">—</span>
+          <span class="monitor-field-unit">px²</span>
+        </div>
+        <!-- 发送频率 -->
+        <div class="monitor-field">
+          <span class="monitor-field-label">频率</span>
+          <span id="mon-rate" class="monitor-field-value">0</span>
+          <span class="monitor-field-unit">次/秒</span>
+        </div>
+      </div>
+
+      <!-- 迷你面积波形图（Canvas 绘制） -->
+      <div class="monitor-chart-wrap">
+        <span class="monitor-chart-label">面积波形</span>
+        <canvas id="monitor-chart" width="220" height="50"></canvas>
+      </div>
+
+      <!-- 历史消息滚动列表 -->
+      <div class="monitor-log-wrap">
+        <span class="monitor-chart-label">发送记录</span>
+        <div id="monitor-log" class="monitor-log">
+          <!-- 每条记录由 DataMonitor.js 动态插入 -->
+        </div>
+      </div>
+
+    </div>
 
     <!-- ── 画布区域 ──────────────────────────────────────────────────────── -->
     <!--
