@@ -165,21 +165,20 @@ export class Canvas {
    * @param {number} y           触点屏幕纵坐标
    * @param {number} touchW      触点宽度（用于画指示圆）
    * @param {number} touchH      触点高度
+   * @param {number} force       触压强度（0~1，支持 3D Touch 的设备实时变化）
    */
-  _onTouch(materialId, area, x, y, touchW, touchH) {
+  _onTouch(materialId, area, x, y, touchW, touchH, force = 0) {
     // 高亮被触碰的贴纸，取消其他贴纸的高亮
     this._stickers.forEach((s) => {
-      // 只有当前材质匹配 且 不是空白区域时才高亮
       s.setActiveTouchStyle(s.materialId === materialId && materialId !== 'none');
     });
 
     // 显示触点指示圆圈
     this._showIndicator(materialId, x, y, touchW, touchH);
 
-    // 通过蓝牙发送数据给 MCU
-    this._ble.send(materialId, area);
+    // 通过蓝牙发送数据给 MCU（包含 force）
+    this._ble.send(materialId, area, force);
 
-    // 记录最后一次触碰的材质（调试用）
     this._lastMat = materialId;
   }
 
@@ -217,10 +216,9 @@ export class Canvas {
     const ind  = this._indicator;
     const ring = ind.querySelector('.touch-ring');
 
-    // 圆圈大小 = 触点宽高的最大值 × 3 倍放大，最小 30px
-    // 放大 3 倍的原因：radiusX 原始值只有几像素，不放大时手指轻按和用力按的圆圈
-    // 大小差异几乎看不出来，放大后变化才明显
-    const size = Math.max((touchW || 20) * 3, (touchH || 20) * 3, 30);
+    // 圆圈大小 = 触点宽高（直径）的最大值，最小 30px
+    // 用 || 而不是 ??，防止 touchW=0 时圆圈变成最小值
+    const size = Math.max(touchW || 20, touchH || 20, 30);
     ring.style.width  = `${size}px`;
     ring.style.height = `${size}px`;
 

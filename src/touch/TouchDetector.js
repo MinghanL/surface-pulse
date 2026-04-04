@@ -110,16 +110,37 @@ export class TouchDetector {
     const x = touch.clientX; // 触点横坐标（相对于浏览器视口左边缘）
     const y = touch.clientY; // 触点纵坐标（相对于浏览器视口顶边缘）
 
-    // radiusX / radiusY：手指接触区域的半径（单位 px）
-    // 手指越胖、按得越用力，这个值越大
+    // ── 接触面积计算 ────────────────────────────────────────────────────
+    //
+    // iOS 的限制：radiusX/Y 只在 touchstart 时准确，
+    // touchmove 期间这两个值不再更新（WebKit 已知行为）。
+    //
+    // 解决方案：用 touch.force（触压强度，范围 0.0 ~ 1.0）在移动时动态修正面积。
+    //   - touchstart：radiusX/Y 准确，直接用它计算基础面积
+    //   - touchmove ：radiusX/Y 冻结，但 force 会随手指压力变化
+    //                 用 force 对基础面积做缩放：轻触→小，重按→大
+    //
+    // force 修正公式：area = baseArea × (0.6 + force × 0.8)
+    //   force=0.0 时 → 0.6 倍（轻触）
+    //   force=0.5 时 → 1.0 倍（正常）
+    //   force=1.0 时 → 1.4 倍（重按）
+    //
     // 注意：用 || 而不是 ??
-    //   ?? 只在值为 null/undefined 时兜底
-    //   || 在值为 0 时也会兜底（iOS/Bluefy 上 radiusX 可能返回 0）
+    //   ?? 只在 null/undefined 时兜底，对 0 无效
+    //   || 在值为 0 时也兜底（iOS/Bluefy 上 radiusX 有时返回 0）
+
     const rx = touch.radiusX || 10;
     const ry = touch.radiusY || 10;
 
-    // 用椭圆面积公式计算接触面积：面积 = π × rx × ry
-    const area = Math.PI * rx * ry;
+    // 基础面积（椭圆面积公式：π × rx × ry）
+    const baseArea = Math.PI * rx * ry;
+
+    // touch.force：iOS 支持，范围 0~1（普通屏）或更高（3D Touch 屏）
+    // 如果浏览器不支持 force（返回 0 或 undefined），forceScale 固定为 1（不修正）
+    const force      = touch.force || 0;
+    const forceScale = force > 0 ? (0.6 + force * 0.8) : 1;
+
+    const area = baseArea * forceScale;
 
     // 检测这个坐标命中了哪个材质贴纸
     const hit = this._hitTest(x, y);
@@ -131,6 +152,7 @@ export class TouchDetector {
       area,                          // 接触面积
       x, y,                          // 坐标
       rx * 2, ry * 2,                // 接触宽度和高度（用于画指示圆）
+      force,                         // 触压强度（0~1，3D Touch 设备实时变化）
     );
   }
 
@@ -205,6 +227,7 @@ export class TouchDetector {
       area,
       x, y,
       simulatedRadius * 2, simulatedRadius * 2,
+      0, // 鼠标没有压力感应，force 固定为 0
     );
   }
 

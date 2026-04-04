@@ -42,7 +42,7 @@ new MaterialDrawer(canvas);
 // 4. 创建数据监控窗口，并挂载到蓝牙管理器的发送钩子上
 //    这样每次触摸（无论是否已连蓝牙）都会实时显示在监控窗口里
 const monitor = new DataMonitor();
-ble.onSend((materialId, area) => monitor.record(materialId, area));
+ble.onSend((materialId, area, force) => monitor.record(materialId, area, force));
 
 // ─── 顶部栏蓝牙状态按钮 ────────────────────────────────────────────────────────
 

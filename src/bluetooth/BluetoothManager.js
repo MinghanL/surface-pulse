@@ -196,25 +196,28 @@ export class BluetoothManager {
    * 每次触摸事件触发时都会调用这个方法。
    *
    * 发送步骤：
-   *   1. 把数据打包成 JSON 字符串，例如：{"material":"glass","area":1234}
+   *   1. 把数据打包成 JSON 字符串，例如：{"material":"glass","area":1234,"force":0.52}
    *   2. 用 TextEncoder 把字符串转成字节数组（蓝牙只能传输二进制数据）
    *   3. 通过 TX 通道写入 MCU
    *
    * @param {string} materialId  当前触碰的材质 ID，空白时为 "none"
    * @param {number} area        接触面积（单位：像素²）
+   * @param {number} force       触压强度（0~1，不支持 3D Touch 的设备固定为 0）
    */
-  async send(materialId, area) {
+  async send(materialId, area, force = 0) {
     // 无论是否连接蓝牙，都先通知监控窗口记录这次数据
-    this._onSend?.(materialId, Math.round(area));
+    this._onSend?.(materialId, Math.round(area), force);
 
     // 如果没有连接蓝牙，只通知监控，不发送蓝牙数据
     if (!this.isConnected || !this._txChar) return;
 
     // 构造 JSON 数据包
-    // Math.round(area)：把小数面积四舍五入为整数，节省传输字节
+    // Math.round(area)：面积四舍五入为整数
+    // force 保留两位小数（MCU 精度够用，且比完整小数节省字节）
     const payload = JSON.stringify({
       material: materialId,
       area: Math.round(area),
+      force: Math.round(force * 100) / 100,
     });
 
     // TextEncoder：把 JS 字符串（UTF-16）转换为 UTF-8 字节数组

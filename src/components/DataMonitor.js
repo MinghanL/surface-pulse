@@ -29,6 +29,8 @@ export class DataMonitor {
     this._elMaterial = document.getElementById('mon-material'); // 材质字段
     this._elArea     = document.getElementById('mon-area');     // 面积字段
     this._elRate     = document.getElementById('mon-rate');     // 频率字段
+    this._elForce    = document.getElementById('mon-force');    // force 数值
+    this._elForceBar = document.getElementById('mon-force-bar');// force 进度条填充
 
     this._canvas  = document.getElementById('monitor-chart');   // 波形 Canvas
     this._ctx     = this._canvas.getContext('2d');              // 2D 绘图上下文
@@ -36,8 +38,10 @@ export class DataMonitor {
 
     // ── 数据存储 ─────────────────────────────────────────────────────────
     // 面积历史数组（最多保留 50 个点，用于绘制波形）
-    this._areaHistory = [];
-    this._MAX_HISTORY = 50;
+    this._areaHistory  = [];
+    // force 历史数组（与面积同步，绘制第二条波形线）
+    this._forceHistory = [];
+    this._MAX_HISTORY  = 50;
 
     // 用于计算发送频率：记录最近 1 秒内的发送次数
     this._rateCount    = 0;  // 当前计数
@@ -72,12 +76,15 @@ export class DataMonitor {
   }
 
   _clear() {
-    this._areaHistory = [];
+    this._areaHistory  = [];
+    this._forceHistory = [];
     this._logEl.innerHTML = '';
     this._elMaterial.textContent = '—';
     this._elMaterial.removeAttribute('data-mat');
     this._elArea.textContent = '—';
     this._elRate.textContent = '0';
+    this._elForce.textContent = '—';
+    this._elForceBar.style.width = '0%';
     this._drawChart();
   }
 
@@ -87,8 +94,9 @@ export class DataMonitor {
    * 外部调用：每次发送蓝牙数据时调用这个方法
    * @param {string} materialId  材质 ID，例如 "glass" 或 "none"
    * @param {number} area        接触面积（px²）
+   * @param {number} force       触压强度（0~1）
    */
-  record(materialId, area) {
+  record(materialId, area, force = 0) {
     // ── 更新当前状态字段 ──────────────────────────────────────────────────
     const matLabels = {
       glass: '玻璃', wood: '木头', metal: '金属',
@@ -102,12 +110,14 @@ export class DataMonitor {
     // 更新面积显示
     this._elArea.textContent = area > 0 ? Math.round(area).toLocaleString() : '0';
 
+    // 更新 force 显示和进度条
+    this._updateForce(force);
+
     // ── 更新频率计数 ──────────────────────────────────────────────────────
     this._rateCount++;
 
     // ── 更新呼吸圆点（有数据 = 绿色闪烁） ────────────────────────────────
     this._liveDot.classList.remove('idle');
-    // 300ms 内没有新数据 → 变灰
     clearTimeout(this._idleTimer);
     this._idleTimer = setTimeout(() => {
       this._liveDot.classList.add('idle');
@@ -115,15 +125,17 @@ export class DataMonitor {
 
     // ── 记录面积历史（用于波形图） ────────────────────────────────────────
     this._areaHistory.push(area);
+    // 同步记录 force 历史（用于第二条波形线）
+    this._forceHistory.push(force);
     if (this._areaHistory.length > this._MAX_HISTORY) {
-      this._areaHistory.shift(); // 超出上限时删掉最旧的点
+      this._areaHistory.shift();
+      this._forceHistory.shift();
     }
     this._drawChart();
 
     // ── 添加到历史记录列表 ────────────────────────────────────────────────
-    // material = "none" 时不加到记录（减少噪音，只记录有意义的触碰）
     if (materialId !== 'none') {
-      this._addLogEntry(materialId, area);
+      this._addLogEntry(materialId, area, force);
     }
   }
 
@@ -138,6 +150,36 @@ export class DataMonitor {
       this._elRate.textContent = this._rateDisplay;
       this._rateCount = 0;
     }, 1000);
+  }
+
+  // ─── Force 显示 ──────────────────────────────────────────────────────────────
+
+  /**
+   * 更新 force 数值和进度条
+   * 进度条宽度 = force × 100%（例如 force=0.6 → 宽度60%）
+   * 颜色随 force 从绿色渐变到橙色再到红色，直观表示压力大小
+   *
+   * @param {number} force  0~1
+   */
+  _updateForce(force) {
+    // 数值：保留两位小数（例如 "0.62"）
+    this._elForce.textContent = force > 0 ? force.toFixed(2) : '0';
+
+    // 进度条宽度（百分比）
+    const pct = Math.min(force * 100, 100).toFixed(1);
+    this._elForceBar.style.width = `${pct}%`;
+
+    // 颜色：
+    //   force < 0.4 → 绿色（轻触）
+    //   force < 0.7 → 黄橙色（中等）
+    //   force ≥ 0.7 → 红色（重按）
+    let color;
+    if (force < 0.4)      color = '#4ade80'; // 绿
+    else if (force < 0.7) color = '#fb923c'; // 橙
+    else                  color = '#f87171'; // 红
+
+    this._elForceBar.style.background = color;
+    this._elForce.style.color = force > 0 ? color : 'var(--text-muted)';
   }
 
   // ─── 波形图绘制 ──────────────────────────────────────────────────────────────
@@ -219,20 +261,48 @@ export class DataMonitor {
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // 在最新数据点画一个小圆点
+    // 在面积折线最新数据点画一个小圆点
     ctx.beginPath();
     ctx.arc(lastX, lastY, 3, 0, Math.PI * 2);
     ctx.fillStyle = '#a78bfa';
     ctx.fill();
+
+    // ── 绘制 force 折线（叠加在面积图上，用橙色区分）──────────────────────
+    const fData = this._forceHistory;
+    if (fData.length >= 2) {
+      const fStartX = (this._MAX_HISTORY - fData.length) * step;
+
+      ctx.beginPath();
+      fData.forEach((f, i) => {
+        const fx = fStartX + i * step;
+        // force 范围 0~1，映射到画布高度（留 4px 边距）
+        const fy = H - f * (H - 4) - 2;
+        if (i === 0) ctx.moveTo(fx, fy);
+        else         ctx.lineTo(fx, fy);
+      });
+
+      ctx.strokeStyle = 'rgba(251,146,60,0.85)'; // 橙色
+      ctx.lineWidth   = 1.5;
+      ctx.lineJoin    = 'round';
+      ctx.stroke();
+
+      // 最新 force 点的小圆点
+      const fLastX = fStartX + (fData.length - 1) * step;
+      const fLastY = H - fData[fData.length - 1] * (H - 4) - 2;
+      ctx.beginPath();
+      ctx.arc(fLastX, fLastY, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#fb923c';
+      ctx.fill();
+    }
   }
 
   // ─── 历史记录列表 ────────────────────────────────────────────────────────────
 
   /**
    * 在列表顶部插入一条记录
-   * 格式：● 玻璃   314 px²   12:34:56
+   * 格式：● 玻璃   314 px²   f:0.52   12:34:56
    */
-  _addLogEntry(materialId, area) {
+  _addLogEntry(materialId, area, force = 0) {
     const matLabels = {
       glass: '玻璃', wood: '木头', metal: '金属',
       rubber: '橡胶', fabric: '布料', stone: '石头',
@@ -241,16 +311,20 @@ export class DataMonitor {
     // 当前时间（时:分:秒）
     const now  = new Date();
     const time = [now.getHours(), now.getMinutes(), now.getSeconds()]
-      .map((n) => String(n).padStart(2, '0')) // padStart：不足两位前面补零
+      .map((n) => String(n).padStart(2, '0'))
       .join(':');
 
-    // 创建记录行
+    // force 颜色和文字
+    const forceColor = force < 0.4 ? '#4ade80' : force < 0.7 ? '#fb923c' : '#f87171';
+    const forceText  = force > 0 ? force.toFixed(2) : '—';
+
     const entry = document.createElement('div');
     entry.className = 'monitor-log-entry';
     entry.innerHTML = `
       <span class="log-dot mat-${materialId}"></span>
       <span class="log-mat">${matLabels[materialId] ?? materialId}</span>
       <span class="log-area">${Math.round(area).toLocaleString()} px²</span>
+      <span class="log-force" style="color:${forceColor}">f:${forceText}</span>
       <span class="log-time">${time}</span>
     `;
 
