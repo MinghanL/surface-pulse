@@ -165,9 +165,8 @@ export class Canvas {
    * @param {number} y           触点屏幕纵坐标
    * @param {number} touchW      触点宽度（用于画指示圆）
    * @param {number} touchH      触点高度
-   * @param {number} force       触压强度（0~1，支持 3D Touch 的设备实时变化）
    */
-  _onTouch(materialId, area, x, y, touchW, touchH, force = 0) {
+  _onTouch(materialId, area, x, y, touchW, touchH) {
     // 高亮被触碰的贴纸，取消其他贴纸的高亮
     this._stickers.forEach((s) => {
       s.setActiveTouchStyle(s.materialId === materialId && materialId !== 'none');
@@ -176,8 +175,8 @@ export class Canvas {
     // 显示触点指示圆圈
     this._showIndicator(materialId, x, y, touchW, touchH);
 
-    // 通过蓝牙发送数据给 MCU（包含 force）
-    this._ble.send(materialId, area, force);
+    // 通过蓝牙发送数据给 MCU
+    this._ble.send(materialId, area);
 
     this._lastMat = materialId;
   }
