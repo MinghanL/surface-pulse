@@ -59,6 +59,20 @@ export class BluetoothManager {
     // 状态变化回调函数（由 main.js 注册，用于更新 UI）
     // 状态取值：'disconnected'（未连接）| 'connecting'（连接中）| 'connected'（已连接）
     this._onStatusChange = null;
+
+    // 数据发送回调（由 main.js 注册，每次 send() 时触发，用于数据监控窗口）
+    this._onSend = null;
+  }
+
+  /**
+   * 注册数据发送监听器
+   * 每次调用 send() 时都会触发这个回调，无论蓝牙是否已连接。
+   * 这样监控窗口在未连接时也能显示触摸数据（方便本地调试）。
+   *
+   * @param {Function} cb  回调函数，参数为 (materialId, area)
+   */
+  onSend(cb) {
+    this._onSend = cb;
   }
 
   /**
@@ -190,7 +204,10 @@ export class BluetoothManager {
    * @param {number} area        接触面积（单位：像素²）
    */
   async send(materialId, area) {
-    // 如果没有连接蓝牙，直接返回（不报错）
+    // 无论是否连接蓝牙，都先通知监控窗口记录这次数据
+    this._onSend?.(materialId, Math.round(area));
+
+    // 如果没有连接蓝牙，只通知监控，不发送蓝牙数据
     if (!this.isConnected || !this._txChar) return;
 
     // 构造 JSON 数据包

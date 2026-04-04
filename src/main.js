@@ -22,10 +22,11 @@
  * ============================================================
  */
 
-// 导入三个核心模块
+// 导入核心模块
 import { BluetoothManager } from './bluetooth/BluetoothManager.js';
 import { Canvas }           from './components/Canvas.js';
 import { MaterialDrawer }   from './components/MaterialDrawer.js';
+import { DataMonitor }      from './components/DataMonitor.js';
 
 // ─── 初始化核心模块 ────────────────────────────────────────────────────────────
 
@@ -36,9 +37,12 @@ const ble = new BluetoothManager();
 const canvas = new Canvas(document.getElementById('canvas'), ble);
 
 // 3. 创建材质抽屉（需要传入画布，拖拽和模板操作会调用画布的方法）
-//    变量名前面加下划线 _ 是一种约定，表示"这个变量暂时不会在后面被引用"
-//    eslint-disable-line no-unused-vars：关闭 ESLint 对未使用变量的警告
-const _drawer = new MaterialDrawer(canvas); // eslint-disable-line no-unused-vars
+new MaterialDrawer(canvas);
+
+// 4. 创建数据监控窗口，并挂载到蓝牙管理器的发送钩子上
+//    这样每次触摸（无论是否已连蓝牙）都会实时显示在监控窗口里
+const monitor = new DataMonitor();
+ble.onSend((materialId, area) => monitor.record(materialId, area));
 
 // ─── 顶部栏蓝牙状态按钮 ────────────────────────────────────────────────────────
 
