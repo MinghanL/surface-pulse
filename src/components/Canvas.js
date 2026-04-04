@@ -217,8 +217,10 @@ export class Canvas {
     const ind  = this._indicator;
     const ring = ind.querySelector('.touch-ring');
 
-    // 圆圈大小 = 触点宽高的最大值，最小 30px（防止太小看不见）
-    const size = Math.max(touchW ?? 20, touchH ?? 20, 30);
+    // 圆圈大小 = 触点宽高的最大值 × 3 倍放大，最小 30px
+    // 放大 3 倍的原因：radiusX 原始值只有几像素，不放大时手指轻按和用力按的圆圈
+    // 大小差异几乎看不出来，放大后变化才明显
+    const size = Math.max((touchW || 20) * 3, (touchH || 20) * 3, 30);
     ring.style.width  = `${size}px`;
     ring.style.height = `${size}px`;
 

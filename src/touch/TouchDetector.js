@@ -112,9 +112,11 @@ export class TouchDetector {
 
     // radiusX / radiusY：手指接触区域的半径（单位 px）
     // 手指越胖、按得越用力，这个值越大
-    // 如果浏览器不支持，默认给 10px
-    const rx = touch.radiusX ?? 10;
-    const ry = touch.radiusY ?? 10;
+    // 注意：用 || 而不是 ??
+    //   ?? 只在值为 null/undefined 时兜底
+    //   || 在值为 0 时也会兜底（iOS/Bluefy 上 radiusX 可能返回 0）
+    const rx = touch.radiusX || 10;
+    const ry = touch.radiusY || 10;
 
     // 用椭圆面积公式计算接触面积：面积 = π × rx × ry
     const area = Math.PI * rx * ry;
