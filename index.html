@@ -51,7 +51,7 @@
   <title>Surface Pulse</title>
 
   <!-- 引入全局样式表 -->
-  <script type="module" crossorigin src="/surface-pulse/assets/index-DNXymmdH.js"></script>
+  <script type="module" crossorigin src="/surface-pulse/assets/index-BYFe9owV.js"></script>
   <link rel="stylesheet" crossorigin href="/surface-pulse/assets/index-ChGFr5DC.css">
 </head>
 <body>
@@ -89,7 +89,7 @@
         </svg>
 
         <!-- 状态文字（由 main.js 动态更新） -->
-        <span id="ble-label">未连接</span>
+        <span id="ble-label">Disconnected</span>
       </div>
 
       <!-- 数据监控按钮（点击后显示/隐藏左上角实时数据窗口） -->
@@ -114,42 +114,42 @@
         <!-- 左侧：绿色呼吸圆点 + 标题 -->
         <div class="monitor-title">
           <span class="monitor-live-dot"></span>
-          <span>实时数据</span>
+          <span>Live Data</span>
         </div>
         <!-- 右侧：清空按钮 -->
-        <button id="monitor-clear" title="清空记录">清空</button>
+        <button id="monitor-clear" title="Clear log">Clear</button>
       </div>
 
       <!-- 当前触碰状态（大字显示） -->
       <div class="monitor-current">
         <!-- 材质名称 -->
         <div class="monitor-field">
-          <span class="monitor-field-label">材质</span>
+          <span class="monitor-field-label">Mat</span>
           <span id="mon-material" class="monitor-field-value">—</span>
         </div>
         <!-- 接触面积 -->
         <div class="monitor-field">
-          <span class="monitor-field-label">面积</span>
+          <span class="monitor-field-label">Area</span>
           <span id="mon-area" class="monitor-field-value">—</span>
           <span class="monitor-field-unit">px²</span>
         </div>
         <!-- 发送频率 -->
         <div class="monitor-field">
-          <span class="monitor-field-label">频率</span>
+          <span class="monitor-field-label">Rate</span>
           <span id="mon-rate" class="monitor-field-value">0</span>
-          <span class="monitor-field-unit">次/秒</span>
+          <span class="monitor-field-unit">/ sec</span>
         </div>
       </div>
 
       <!-- 迷你面积波形图（Canvas 绘制） -->
       <div class="monitor-chart-wrap">
-        <span class="monitor-chart-label">面积波形</span>
+        <span class="monitor-chart-label">Area waveform</span>
         <canvas id="monitor-chart" width="220" height="50"></canvas>
       </div>
 
       <!-- 历史消息滚动列表 -->
       <div class="monitor-log-wrap">
-        <span class="monitor-chart-label">发送记录</span>
+        <span class="monitor-chart-label">Send log</span>
         <div id="monitor-log" class="monitor-log">
           <!-- 每条记录由 DataMonitor.js 动态插入 -->
         </div>
@@ -176,8 +176,8 @@
           当用户添加第一个贴纸后，Canvas.js 会给它加 "hidden" 类使其消失
         -->
         <div id="empty-hint">
-          <p>拖入材质开始体验</p>
-          <p class="hint-sub">或点击右侧 ▶ 打开材质库</p>
+          <p>Drag a material onto the canvas</p>
+          <p class="hint-sub">Or tap ▶ to open the material library</p>
         </div>
 
         <!-- 材质贴纸由 Canvas.js 动态插入这里（MaterialSticker.js 创建） -->
@@ -190,7 +190,7 @@
       点击后打开材质库抽屉，抽屉打开后三角旋转 180° 变成向左（◀）。
       点击事件在 MaterialDrawer.js 里绑定。
     -->
-    <button id="drawer-toggle" aria-label="打开材质库">
+    <button id="drawer-toggle" aria-label="Open material library">
       <!-- 三角形 SVG 图标 -->
       <svg viewBox="0 0 24 24" fill="currentColor">
         <polygon points="6,3 20,12 6,21"/>
@@ -209,13 +209,13 @@
 
       <!-- 抽屉头部：标题 + 关闭按钮 -->
       <div class="drawer-header">
-        <h2>材质库</h2>
-        <button id="drawer-close" aria-label="关闭抽屉">✕</button>
+        <h2>Materials</h2>
+        <button id="drawer-close" aria-label="Close drawer">✕</button>
       </div>
 
       <!-- 材质贴纸区域 -->
       <section class="drawer-section">
-        <h3>材质贴纸</h3>
+        <h3>Stickers</h3>
         <!--
           材质网格容器（3列网格布局）
           内容由 MaterialDrawer.js 的 _buildPalette() 方法动态填充
@@ -227,7 +227,7 @@
 
       <!-- 模板区域 -->
       <section class="drawer-section">
-        <h3>模板</h3>
+        <h3>Templates</h3>
         <!--
           模板列表容器
           内容由 MaterialDrawer.js 的 _buildTemplates() 方法动态填充
