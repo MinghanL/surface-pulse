@@ -29,12 +29,13 @@ export const TEMPLATES = [
   {
     id: 'basic',
     name: 'Basic',
-    description: 'Glass · Wood · Metal',
+    description: 'Glass · Wood · Metal  · Sand',
     stickers: [
       // 三个贴纸横向均匀排列在画布中间偏上的位置
       { materialId: 'glass',  xPct: 0.20, yPct: 0.35 }, // 左边 20%，高度 35%
       { materialId: 'wood',   xPct: 0.50, yPct: 0.35 }, // 正中 50%，高度 35%
       { materialId: 'metal',  xPct: 0.80, yPct: 0.35 }, // 右边 80%，高度 35%
+      { materialId: 'sand',   xPct: 0.50, yPct: 0.65 }, // 正中 50%，高度 35%
     ],
   },
   {

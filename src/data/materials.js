@@ -65,6 +65,13 @@ export const MATERIALS = [
     cssClass: 'mat-stone',  // 灰色石头渐变
     size: 100,
   },
+  {
+    id: 'sand',
+    label: 'Sand',
+    icon: '🏖️',
+    cssClass: 'mat-sand',  // 
+    size: 100,
+  },
 ];
 
 /**

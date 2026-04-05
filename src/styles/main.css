@@ -1,29 +1,29 @@
 /*
  * ============================================================
- * 文件：main.css
- * 作用：全局样式（布局、颜色、动画、组件外观）
+ * File:    main.css
+ * Purpose: Global styles (layout, colors, animations, component appearance)
  * ============================================================
  *
- * 文件结构：
- *   1. Reset & Base      ← 统一浏览器默认样式 + CSS 变量定义
- *   2. App Layout        ← 整体弹性布局（上下排列）
- *   3. Top Bar           ← 顶部导航栏
- *   4. BLE Status        ← 蓝牙状态按钮
- *   5. Canvas Area       ← 画布区域（占满剩余高度）
- *   6. Material Sticker  ← 画布上的圆形材质贴纸
- *   7. Drawer Toggle     ← 右侧三角按钮
- *   8. Material Drawer   ← 右侧滑入抽屉
- *   9. Touch Indicator   ← 触点指示圆圈
- *  10. Material Colors   ← 各材质的颜色渐变
+ * File structure:
+ *   1. Reset & Base      ← Normalize browser defaults + CSS variable definitions
+ *   2. App Layout        ← Top-level flex layout (column direction)
+ *   3. Top Bar           ← Top navigation bar
+ *   4. BLE Status        ← Bluetooth status button
+ *   5. Canvas Area       ← Canvas region (fills remaining height)
+ *   6. Material Sticker  ← Circular material stickers on the canvas
+ *   7. Drawer Toggle     ← Right-side arrow toggle button
+ *   8. Material Drawer   ← Slide-in drawer panel on the right
+ *   9. Touch Indicator   ← Touch point indicator ring
+ *  10. Material Colors   ← Per-material color gradients
  * ============================================================
  */
 
-/* ===== 1. Reset & Base — 基础重置 ===== */
+/* ===== 1. Reset & Base ===== */
 /*
-  * 选择器：匹配所有元素及其伪元素（::before、::after）
-  box-sizing: border-box  → padding 和 border 计入元素宽高，更好计算布局
-  margin/padding: 0       → 消除浏览器默认的外边距和内边距
-  tap-highlight-color     → iOS/Android 上点击时不显示蓝色高亮框
+  * Selector: matches all elements and their pseudo-elements (::before, ::after)
+  box-sizing: border-box  → padding and border are included in element dimensions
+  margin/padding: 0       → remove browser default spacing
+  tap-highlight-color     → suppress blue tap highlight on iOS/Android
 */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -33,43 +33,44 @@
 }
 
 /*
-  :root — CSS 变量定义（全局颜色和尺寸配置）
-  使用变量的好处：修改一个地方，全站颜色同步变化。
-  变量用 var(--变量名) 引用，例如：color: var(--text);
+  :root — CSS variable definitions (global colors and size config)
+  Benefit: changing one variable updates the entire site consistently.
+  Reference variables with var(--name), e.g. color: var(--text);
 */
 :root {
-  /* 背景色（暖象牙奶白） */
+  /* Background — warm ivory white */
   --bg: #FAF7F2;
-  /* 卡片/面板表面色（纯暖白） */
+  /* Card / panel surface — pure warm white */
   --surface: #FFFEFB;
-  /* 二级表面色（浅暖米） */
+  /* Secondary surface — light warm beige, for nested elements */
   --surface2: #F3EDE3;
-  /* 边框色（暖金色 15% 透明度） */
+  /* Border — warm gold at 15% opacity */
   --border: rgba(168,138,90,0.15);
-  /* 香槟金（用于强调元素） */
+  /* Champagne gold — primary accent */
   --accent: #A8865A;
-  /* 浅金色（渐变、高亮） */
+  /* Light gold — gradients and highlights */
   --accent2: #C9A96E;
-  /* 主要文字色（深暖棕） */
+  /* Primary text — deep warm brown */
   --text: #2C2010;
-  /* 次要文字色（暖棕灰） */
+  /* Secondary text — warm brown-grey, for captions */
   --text-muted: #9A8470;
-  /* 抽屉宽度 */
+  /* Drawer width */
   --drawer-width: 280px;
-  /* 顶部栏高度 */
+  /* Top bar height */
   --topbar-h: 56px;
-  /* 圆角半径 */
+  /* Border radius */
   --radius: 16px;
-  /* 统一过渡动画（0.3秒，缓入缓出曲线） */
+  /* Shared transition (0.3s ease-in-out curve) */
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* 各材质的代表色 */
+  /* Representative color per material */
   --mat-glass:  #7BAFC4;
   --mat-wood:   #B8865A;
   --mat-metal:  #8A9BB0;
   --mat-rubber: #6A9E78;
   --mat-fabric: #B87EA8;
   --mat-stone:  #9B8E85;
+  --mat-sand:   #D4B483;
 }
 
 html, body {
@@ -607,6 +608,7 @@ html, body {
 .mat-rubber { background: radial-gradient(circle at 35% 35%, rgba(106,158,120,0.9), rgba(60,110,75,0.8)); }
 .mat-fabric { background: radial-gradient(circle at 35% 35%, rgba(196,126,176,0.9), rgba(140,70,130,0.7)); }
 .mat-stone  { background: radial-gradient(circle at 35% 35%, rgba(155,142,133,0.9), rgba(100,90,82,0.8)); }
+.mat-sand   { background: radial-gradient(circle at 35% 35%, rgba(232,210,160,0.95), rgba(192,158,90,0.85)); }
 
 /* ===== Scrollbar ===== */
 #material-drawer::-webkit-scrollbar { width: 4px; }
@@ -618,7 +620,7 @@ html, body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* ===== 监控按钮（顶部栏）===== */
+/* ===== Monitor Toggle Button (top bar) ===== */
 #monitor-toggle {
   width: 36px;
   height: 36px;
@@ -640,7 +642,7 @@ html, body {
   height: 16px;
 }
 
-/* 激活态：金色高亮 */
+/* Active state — gold highlight */
 #monitor-toggle.active {
   color: var(--accent);
   border-color: rgba(168,134,90,0.4);
@@ -651,10 +653,10 @@ html, body {
   transform: scale(0.94);
 }
 
-/* ===== 数据监控悬浮窗 ===== */
+/* ===== Data Monitor Floating Panel ===== */
 #data-monitor {
   position: fixed;
-  /* 左上角，顶部栏下方，留出安全边距 */
+  /* Top-left corner, below the top bar with safe margin */
   top: calc(var(--topbar-h) + 10px);
   left: 12px;
   width: 240px;
@@ -666,19 +668,19 @@ html, body {
   z-index: 300;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(100,70,30,0.14), 0 0 0 1px rgba(201,169,110,0.12);
-  /* 显示/隐藏动画 */
+  /* Show / hide animation */
   transition: opacity 0.2s, transform 0.2s;
   transform-origin: top left;
 }
 
-/* 隐藏状态 */
+/* Hidden state */
 #data-monitor.monitor-hidden {
   opacity: 0;
   pointer-events: none;
   transform: scale(0.92);
 }
 
-/* 标题栏 */
+/* Title bar */
 .monitor-titlebar {
   display: flex;
   align-items: center;
@@ -698,7 +700,7 @@ html, body {
   letter-spacing: 0.8px;
 }
 
-/* 金色呼吸圆点（表示实时）*/
+/* Gold breathing dot — indicates live data */
 .monitor-live-dot {
   width: 7px;
   height: 7px;
@@ -708,7 +710,7 @@ html, body {
   animation: live-pulse 1.8s ease-in-out infinite;
 }
 
-/* 有数据传输时变绿色闪烁，无数据时变灰 */
+/* Idle state — grey, no animation */
 .monitor-live-dot.idle {
   background: var(--text-muted);
   box-shadow: none;
@@ -720,7 +722,7 @@ html, body {
   50%       { opacity: 0.35; }
 }
 
-/* 清空按钮 */
+/* Clear button */
 #monitor-clear {
   font-size: 11px;
   color: var(--text-muted);
@@ -733,7 +735,7 @@ html, body {
 }
 #monitor-clear:hover { color: var(--text); }
 
-/* 当前状态区域（三个大字段） */
+/* Current readings section (three main fields) */
 .monitor-current {
   display: flex;
   flex-direction: column;
@@ -761,17 +763,18 @@ html, body {
   font-size: 15px;
   font-weight: 700;
   color: var(--text);
-  font-variant-numeric: tabular-nums; /* 数字等宽，防止跳动 */
+  font-variant-numeric: tabular-nums; /* fixed-width digits to prevent layout shift */
   min-width: 60px;
 }
 
-/* 材质字段有颜色区分 */
+/* Per-material color for the material field */
 #mon-material[data-mat="glass"]  { color: #a8d8ea; }
 #mon-material[data-mat="wood"]   { color: #c8a96e; }
 #mon-material[data-mat="metal"]  { color: #8a9bb0; }
 #mon-material[data-mat="rubber"] { color: #6a9e78; }
 #mon-material[data-mat="fabric"] { color: #c47eb0; }
 #mon-material[data-mat="stone"]  { color: #9b8e85; }
+#mon-material[data-mat="sand"]   { color: #D4B483; }
 #mon-material[data-mat="none"]   { color: var(--text-muted); }
 
 .monitor-field-unit {
@@ -780,7 +783,7 @@ html, body {
 }
 
 
-/* 波形图区域 */
+/* Waveform chart area */
 .monitor-chart-wrap {
   padding: 8px 12px 6px;
   border-bottom: 1px solid var(--border);
@@ -802,7 +805,7 @@ html, body {
   border-radius: 6px;
 }
 
-/* 历史记录列表 */
+/* History log list */
 .monitor-log-wrap {
   padding: 8px 12px 10px;
 }
@@ -815,7 +818,7 @@ html, body {
   gap: 3px;
 }
 
-/* 单条记录 */
+/* Single log entry */
 .monitor-log-entry {
   display: flex;
   align-items: center;
@@ -834,7 +837,7 @@ html, body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* 记录里的材质色点 */
+/* Colored dot per material in log entries */
 .log-dot {
   width: 7px;
   height: 7px;
@@ -848,12 +851,13 @@ html, body {
 .log-dot.mat-rubber { background: #6a9e78; }
 .log-dot.mat-fabric { background: #c47eb0; }
 .log-dot.mat-stone  { background: #9b8e85; }
+.log-dot.mat-sand   { background: #D4B483; }
 .log-dot.mat-none   { background: var(--text-muted); }
 
 .log-mat  { color: var(--text); font-weight: 600; min-width: 36px; }
 .log-area { flex: 1; }
 .log-time { color: rgba(107,107,128,0.6); font-size: 10px; }
 
-/* 滚动条 */
+/* Scrollbar */
 .monitor-log::-webkit-scrollbar { width: 3px; }
 .monitor-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
