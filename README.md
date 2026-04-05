@@ -3,6 +3,9 @@
 
 **[Live Demo →](https://minghanl.github.io/surface-pulse/)**
 
+
+![Surface Pulse](SurfacePulseDemo.gif)
+
 A touch-based material detection interface that communicates with a sensor device over Bluetooth Low Energy. Place material stickers on the canvas, touch them with the sensor, and watch the readings come in live.
 
 ---
@@ -17,6 +20,6 @@ A touch-based material detection interface that communicates with a sensor devic
 
 ---
 
-![Surface Pulse](SurfacePulseDemo.gif)
+
 
 
