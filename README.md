@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Surface Pulse
 
 **[Live Demo →](https://minghanl.github.io/surface-pulse/)**
@@ -18,6 +18,5 @@ A touch-based material detection interface that communicates with a sensor devic
 ---
 
 ![Surface Pulse](SurfacePulseDemo.gif)
-=======
-![Surface  Pulse](SurfacePulseDemo.gif)
->>>>>>> 822333ccda313e64dd6591d6109281309cfdb162
+
+
