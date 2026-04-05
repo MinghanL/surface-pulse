@@ -141,7 +141,7 @@ export class DataMonitor {
     const H = canvas.height;
 
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = 'rgba(255,255,255,0.02)';
+    ctx.fillStyle = 'rgba(168,138,90,0.03)';
     ctx.fillRect(0, 0, W, H);
 
     const data = this._areaHistory;
@@ -150,7 +150,7 @@ export class DataMonitor {
     const maxArea = Math.max(...data, 100);
 
     // 辅助虚线
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.strokeStyle = 'rgba(168,138,90,0.12)';
     ctx.lineWidth = 1;
     ctx.setLineDash([3, 4]);
     [0.33, 0.66].forEach((ratio) => {
@@ -165,10 +165,10 @@ export class DataMonitor {
     const step   = W / (this._MAX_HISTORY - 1);
     const startX = (this._MAX_HISTORY - data.length) * step;
 
-    // 渐变填充
+    // 渐变填充（香槟金）
     const grad = ctx.createLinearGradient(0, 0, 0, H);
-    grad.addColorStop(0, 'rgba(124,111,247,0.5)');
-    grad.addColorStop(1, 'rgba(124,111,247,0.0)');
+    grad.addColorStop(0, 'rgba(168,138,90,0.4)');
+    grad.addColorStop(1, 'rgba(168,138,90,0.0)');
 
     ctx.beginPath();
     data.forEach((area, i) => {
@@ -178,8 +178,8 @@ export class DataMonitor {
       else         ctx.lineTo(x, y);
     });
 
-    // 紫色折线
-    ctx.strokeStyle = 'rgba(124,111,247,0.9)';
+    // 金色折线
+    ctx.strokeStyle = 'rgba(168,138,90,0.85)';
     ctx.lineWidth   = 1.5;
     ctx.lineJoin    = 'round';
     ctx.stroke();
@@ -196,7 +196,7 @@ export class DataMonitor {
     // 最新数据点的小圆点
     ctx.beginPath();
     ctx.arc(lastX, lastY, 3, 0, Math.PI * 2);
-    ctx.fillStyle = '#a78bfa';
+    ctx.fillStyle = '#C9A96E';
     ctx.fill();
   }
 

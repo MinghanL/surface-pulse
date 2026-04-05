@@ -38,22 +38,22 @@
   变量用 var(--变量名) 引用，例如：color: var(--text);
 */
 :root {
-  /* 背景色（深空黑） */
-  --bg: #ffe5d8;
-  /* 卡片/面板表面色（略浅） */
-  --surface: #16161f;
-  /* 二级表面色（更浅，用于嵌套元素） */
-  --surface2: #1e1e2a;
-  /* 边框色（白色 8% 透明度，若隐若现的分割线） */
-  --border: rgba(255,255,255,0.08);
-  /* 主题紫色（用于强调元素） */
-  --accent: #7c6ff7;
-  /* 浅紫色（渐变、高亮） */
-  --accent2: #a78bfa;
-  /* 主要文字色（近白） */
-  --text: #e8e8f0;
-  /* 次要文字色（灰色，用于说明文字） */
-  --text-muted: #6b6b80;
+  /* 背景色（暖象牙奶白） */
+  --bg: #FAF7F2;
+  /* 卡片/面板表面色（纯暖白） */
+  --surface: #FFFEFB;
+  /* 二级表面色（浅暖米） */
+  --surface2: #F3EDE3;
+  /* 边框色（暖金色 15% 透明度） */
+  --border: rgba(168,138,90,0.15);
+  /* 香槟金（用于强调元素） */
+  --accent: #A8865A;
+  /* 浅金色（渐变、高亮） */
+  --accent2: #C9A96E;
+  /* 主要文字色（深暖棕） */
+  --text: #2C2010;
+  /* 次要文字色（暖棕灰） */
+  --text-muted: #9A8470;
   /* 抽屉宽度 */
   --drawer-width: 280px;
   /* 顶部栏高度 */
@@ -63,13 +63,13 @@
   /* 统一过渡动画（0.3秒，缓入缓出曲线） */
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* 各材质的代表色（目前仅供参考，实际颜色用渐变实现） */
-  --mat-glass:  #a8d8ea;
-  --mat-wood:   #c8a96e;
-  --mat-metal:  #8a9bb0;
-  --mat-rubber: #6a9e78;
-  --mat-fabric: #c47eb0;
-  --mat-stone:  #9b8e85;
+  /* 各材质的代表色 */
+  --mat-glass:  #7BAFC4;
+  --mat-wood:   #B8865A;
+  --mat-metal:  #8A9BB0;
+  --mat-rubber: #6A9E78;
+  --mat-fabric: #B87EA8;
+  --mat-stone:  #9B8E85;
 }
 
 html, body {
@@ -97,7 +97,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background: rgba(13,13,18,0.85);
+  background: rgba(250,247,242,0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
@@ -130,7 +130,7 @@ html, body {
   font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.3px;
-  background: linear-gradient(135deg, #fff 30%, var(--accent2));
+  background: linear-gradient(135deg, var(--text) 20%, var(--accent2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -190,8 +190,8 @@ html, body {
   height: 100%;
   position: relative;
   background:
-    radial-gradient(ellipse at 20% 30%, rgba(124,111,247,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 70%, rgba(167,139,250,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 30%, rgba(201,169,110,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(168,138,90,0.05) 0%, transparent 60%),
     var(--bg);
   touch-action: none;
   user-select: none;
@@ -205,8 +205,8 @@ html, body {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    linear-gradient(rgba(168,138,90,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168,138,90,0.05) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none;
 }
@@ -251,9 +251,9 @@ html, body {
   -webkit-user-select: none;
   touch-action: none;
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(255,255,255,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.15);
+    0 8px 32px rgba(100,70,30,0.18),
+    0 0 0 1px rgba(201,169,110,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.45);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   transform-origin: center;
 }
@@ -263,17 +263,17 @@ html, body {
   cursor: grabbing;
   transform: scale(1.05);
   box-shadow:
-    0 16px 48px rgba(0,0,0,0.5),
-    0 0 0 2px rgba(255,255,255,0.2),
-    inset 0 1px 0 rgba(255,255,255,0.2);
+    0 16px 48px rgba(100,70,30,0.28),
+    0 0 0 2px rgba(201,169,110,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.5);
   z-index: 100;
 }
 
 .material-sticker.active-touch {
   box-shadow:
-    0 0 0 4px rgba(255,255,255,0.6),
-    0 8px 32px rgba(0,0,0,0.4),
-    inset 0 1px 0 rgba(255,255,255,0.15);
+    0 0 0 4px rgba(201,169,110,0.55),
+    0 8px 32px rgba(100,70,30,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.45);
   transform: scale(1.08);
 }
 
@@ -298,7 +298,7 @@ html, body {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(30,30,40,0.95);
+  background: rgba(250,247,242,0.97);
   border: 1px solid var(--border);
   color: var(--text-muted);
   font-size: 12px;
@@ -334,14 +334,14 @@ html, body {
   border: 1px solid var(--border);
   border-right: none;
   border-radius: 12px 0 0 12px;
-  color: var(--accent2);
+  color: var(--accent);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 20;
   transition: background var(--transition), transform var(--transition), color var(--transition);
-  box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+  box-shadow: -4px 0 20px rgba(100,70,30,0.12);
 }
 
 #drawer-toggle:active { background: var(--surface); }
@@ -460,9 +460,9 @@ html, body {
   justify-content: center;
   font-size: 24px;
   box-shadow:
-    0 4px 16px rgba(0,0,0,0.3),
-    0 0 0 1px rgba(255,255,255,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.15);
+    0 4px 16px rgba(100,70,30,0.15),
+    0 0 0 1px rgba(201,169,110,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.45);
   position: relative;
   overflow: hidden;
 }
@@ -488,7 +488,7 @@ html, body {
   align-items: center;
   justify-content: center;
   font-size: 30px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  box-shadow: 0 12px 40px rgba(100,70,30,0.25);
 }
 
 /* ===== Template Grid ===== */
@@ -511,8 +511,8 @@ html, body {
 }
 
 .template-card:active {
-  background: rgba(124,111,247,0.1);
-  border-color: rgba(124,111,247,0.4);
+  background: rgba(168,134,90,0.1);
+  border-color: rgba(168,134,90,0.35);
 }
 
 .template-preview {
@@ -548,7 +548,7 @@ html, body {
 #drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(44,32,16,0.3);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   z-index: 40;
@@ -582,8 +582,8 @@ html, body {
 
 .touch-ring {
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.6);
-  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(168,138,90,0.6);
+  background: rgba(201,169,110,0.06);
   transition: width 0.1s, height 0.1s;
 }
 
@@ -592,7 +592,8 @@ html, body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  background: rgba(13,13,18,0.8);
+  background: rgba(250,247,242,0.92);
+  color: var(--text);
   padding: 3px 8px;
   border-radius: 20px;
   border: 1px solid var(--border);
@@ -639,11 +640,11 @@ html, body {
   height: 16px;
 }
 
-/* 激活态：绿色高亮 */
+/* 激活态：金色高亮 */
 #monitor-toggle.active {
-  color: #4ade80;
-  border-color: rgba(74,222,128,0.4);
-  background: rgba(74,222,128,0.08);
+  color: var(--accent);
+  border-color: rgba(168,134,90,0.4);
+  background: rgba(168,134,90,0.08);
 }
 
 #monitor-toggle:active {
@@ -657,14 +658,14 @@ html, body {
   top: calc(var(--topbar-h) + 10px);
   left: 12px;
   width: 240px;
-  background: rgba(16,16,26,0.92);
+  background: rgba(255,254,251,0.94);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
   border-radius: 14px;
   z-index: 300;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+  box-shadow: 0 8px 32px rgba(100,70,30,0.14), 0 0 0 1px rgba(201,169,110,0.12);
   /* 显示/隐藏动画 */
   transition: opacity 0.2s, transform 0.2s;
   transform-origin: top left;
@@ -697,13 +698,13 @@ html, body {
   letter-spacing: 0.8px;
 }
 
-/* 绿色呼吸圆点（表示实时）*/
+/* 金色呼吸圆点（表示实时）*/
 .monitor-live-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 6px #4ade80;
+  background: var(--accent2);
+  box-shadow: 0 0 6px var(--accent2);
   animation: live-pulse 1.8s ease-in-out infinite;
 }
 
@@ -823,7 +824,7 @@ html, body {
   color: var(--text-muted);
   padding: 3px 6px;
   border-radius: 6px;
-  background: rgba(255,255,255,0.02);
+  background: rgba(168,138,90,0.04);
   font-variant-numeric: tabular-nums;
   animation: log-fadein 0.15s ease;
 }
