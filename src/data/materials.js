@@ -25,42 +25,42 @@
 export const MATERIALS = [
   {
     id: 'glass',        // 英文 ID，蓝牙发送时使用
-    label: '玻璃',      // 界面显示名
+    label: 'Glass',      // 界面显示名
     icon: '🪟',         // 贴纸中心的 Emoji
     cssClass: 'mat-glass', // 对应 main.css 里的 .mat-glass 样式（蓝绿色渐变）
     size: 100,          // 贴纸直径 100px
   },
   {
     id: 'wood',
-    label: '木头',
+    label: 'Wood',
     icon: '🪵',
     cssClass: 'mat-wood',  // 棕色木纹渐变
     size: 100,
   },
   {
     id: 'metal',
-    label: '金属',
+    label: 'Metal',
     icon: '⚙️',
     cssClass: 'mat-metal', // 冷色金属渐变
     size: 100,
   },
   {
     id: 'rubber',
-    label: '橡胶',
+    label: 'Rubber',
     icon: '⭕',
     cssClass: 'mat-rubber', // 绿色橡胶渐变
     size: 100,
   },
   {
     id: 'fabric',
-    label: '布料',
+    label: 'Fabric',
     icon: '🧶',
     cssClass: 'mat-fabric', // 紫粉色布料渐变
     size: 100,
   },
   {
     id: 'stone',
-    label: '石头',
+    label: 'Stone',
     icon: '🪨',
     cssClass: 'mat-stone',  // 灰色石头渐变
     size: 100,

@@ -229,8 +229,8 @@ export class Canvas {
 
     // 更新材质名称标签
     this._indLabel.textContent = materialId === 'none'
-      ? '无材质'              // 触碰空白区域
-      : this._matLabel(materialId); // 触碰材质贴纸
+      ? 'None'
+      : this._matLabel(materialId);
 
     // 添加 visible 类来显示（CSS 里通过 opacity: 1 实现淡入）
     ind.classList.add('visible');
@@ -251,12 +251,12 @@ export class Canvas {
    */
   _matLabel(id) {
     const labels = {
-      glass:  '玻璃',
-      wood:   '木头',
-      metal:  '金属',
-      rubber: '橡胶',
-      fabric: '布料',
-      stone:  '石头',
+      glass:  'Glass',
+      wood:   'Wood',
+      metal:  'Metal',
+      rubber: 'Rubber',
+      fabric: 'Fabric',
+      stone:  'Stone',
     };
     // ?? id：如果 labels 里没找到，就直接显示 id 本身（兜底处理）
     return labels[id] ?? id;

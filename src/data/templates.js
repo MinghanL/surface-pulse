@@ -28,8 +28,8 @@
 export const TEMPLATES = [
   {
     id: 'basic',
-    name: '基础材质',
-    description: '玻璃 · 木头 · 金属',
+    name: 'Basic',
+    description: 'Glass · Wood · Metal',
     stickers: [
       // 三个贴纸横向均匀排列在画布中间偏上的位置
       { materialId: 'glass',  xPct: 0.20, yPct: 0.35 }, // 左边 20%，高度 35%
@@ -39,8 +39,8 @@ export const TEMPLATES = [
   },
   {
     id: 'nature',
-    name: '自然质感',
-    description: '木头 · 石头 · 橡胶',
+    name: 'Nature',
+    description: 'Wood · Stone · Rubber',
     stickers: [
       // 三角形分布，更有层次感
       { materialId: 'wood',   xPct: 0.25, yPct: 0.30 },
@@ -50,8 +50,8 @@ export const TEMPLATES = [
   },
   {
     id: 'tech',
-    name: '科技材质',
-    description: '金属 · 玻璃 · 橡胶',
+    name: 'Tech',
+    description: 'Metal · Glass · Rubber',
     stickers: [
       { materialId: 'metal',  xPct: 0.20, yPct: 0.50 },
       { materialId: 'glass',  xPct: 0.50, yPct: 0.25 },
@@ -60,8 +60,8 @@ export const TEMPLATES = [
   },
   {
     id: 'full',
-    name: '全材质',
-    description: '所有六种材质',
+    name: 'Full Set',
+    description: 'All six materials',
     stickers: [
       // 六个贴纸分两行摆放
       { materialId: 'glass',  xPct: 0.20, yPct: 0.25 }, // 第一行左

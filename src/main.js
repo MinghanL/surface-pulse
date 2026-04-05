@@ -56,9 +56,9 @@ const bleLabelEl  = document.getElementById('ble-label');
  * BluetoothManager 会在状态变化时传入这些 key
  */
 const STATUS_TEXT = {
-  disconnected: '未连接',   // 默认状态
-  connecting:   '连接中…',  // 正在搜索/连接设备
-  connected:    '已连接',   // 连接成功
+  disconnected: 'Disconnected',
+  connecting:   'Connecting…',
+  connected:    'Connected',
 };
 
 /**

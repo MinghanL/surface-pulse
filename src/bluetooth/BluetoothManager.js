@@ -128,10 +128,10 @@ export class BluetoothManager {
     // Chrome (Android/Windows/macOS) 支持，iOS Safari 不支持
     if (!navigator.bluetooth) {
       alert(
-        '此浏览器不支持 Web Bluetooth API。\n' +
-        '请使用：\n' +
-        '• Windows / Android：Google Chrome\n' +
-        '• iOS / iPadOS：Bluefy 或 WebBLE 浏览器'
+        'Web Bluetooth API is not supported in this browser.\n' +
+        'Please use:\n' +
+        '• Windows / Android: Google Chrome\n' +
+        '• iOS / iPadOS: Bluefy or WebBLE browser'
       );
       return false;
     }

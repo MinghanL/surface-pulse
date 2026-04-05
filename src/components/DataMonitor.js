@@ -86,8 +86,8 @@ export class DataMonitor {
   record(materialId, area) {
     // ── 更新当前状态字段 ──────────────────────────────────────────────────
     const matLabels = {
-      glass: '玻璃', wood: '木头', metal: '金属',
-      rubber: '橡胶', fabric: '布料', stone: '石头', none: '无',
+      glass: 'Glass', wood: 'Wood', metal: 'Metal',
+      rubber: 'Rubber', fabric: 'Fabric', stone: 'Stone', none: 'None',
     };
 
     this._elMaterial.textContent = matLabels[materialId] ?? materialId;
@@ -208,8 +208,8 @@ export class DataMonitor {
    */
   _addLogEntry(materialId, area) {
     const matLabels = {
-      glass: '玻璃', wood: '木头', metal: '金属',
-      rubber: '橡胶', fabric: '布料', stone: '石头',
+      glass: 'Glass', wood: 'Wood', metal: 'Metal',
+      rubber: 'Rubber', fabric: 'Fabric', stone: 'Stone',
     };
 
     const now  = new Date();
