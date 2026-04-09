@@ -54,8 +54,8 @@
   <title>Surface Pulse</title>
 
   <!-- 引入全局样式表 -->
-  <script type="module" crossorigin src="/surface-pulse/assets/index-BLUVvn5I.js"></script>
-  <link rel="stylesheet" crossorigin href="/surface-pulse/assets/index-Cv-VpUbT.css">
+  <script type="module" crossorigin src="/surface-pulse/assets/index-LV_wUB8f.js"></script>
+  <link rel="stylesheet" crossorigin href="/surface-pulse/assets/index-CP3uJqf1.css">
 </head>
 <body>
 
@@ -94,6 +94,14 @@
         <!-- 状态文字（由 main.js 动态更新） -->
         <span id="ble-label">Disconnected</span>
       </div>
+
+      <!-- Edit mode toggle — unlocks sticker interaction (move + pinch-resize) -->
+      <button id="edit-toggle" title="Edit mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"/>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+        </svg>
+      </button>
 
       <!-- 数据监控按钮（点击后显示/隐藏左上角实时数据窗口） -->
       <button id="monitor-toggle" title="实时数据监控">
