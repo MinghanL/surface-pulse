@@ -43,6 +43,10 @@ export class MaterialSticker {
     this.el.classList.toggle('edit-mode', active);
   }
 
+  setBlindMode(active) {
+    this.el.classList.toggle('blind-mode', active);
+  }
+
   // ─── Drag + pinch ─────────────────────────────────────────────────────────
 
   _bindDrag() {

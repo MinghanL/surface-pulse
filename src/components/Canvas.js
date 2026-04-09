@@ -42,6 +42,9 @@ export class Canvas {
     // Edit mode — when false, stickers are locked (no drag / resize)
     this._editMode = false;
 
+    // Blind mode — when true, stickers appear as black discs (haptic experiment)
+    this._blindMode = false;
+
     // 上次发送的材质 ID（备用，目前用于调试）
     this._lastMat = null;
 
@@ -86,8 +89,8 @@ export class Canvas {
     // 把贴纸的 DOM 元素插入画布
     this._el.appendChild(sticker.el);
 
-    // Apply current edit mode so new stickers are immediately interactive if unlocked
     sticker.setEditMode(this._editMode);
+    sticker.setBlindMode(this._blindMode);
 
     // Add sticker to tracking array
     this._stickers.push(sticker);
@@ -168,6 +171,12 @@ export class Canvas {
     this._editMode = !this._editMode;
     this._stickers.forEach((s) => s.setEditMode(this._editMode));
     return this._editMode;
+  }
+
+  toggleBlindMode() {
+    this._blindMode = !this._blindMode;
+    this._stickers.forEach((s) => s.setBlindMode(this._blindMode));
+    return this._blindMode;
   }
 
   // ─── 触摸/鼠标事件处理 ────────────────────────────────────────────────────

@@ -80,6 +80,19 @@ ble.onStatusChange((status) => {
  * async/await：connect() 和 disconnect() 是异步操作（需要等待蓝牙响应），
  * 用 await 等待它们完成。
  */
+// ─── Blind mode toggle ─────────────────────────────────────────────────────────
+
+const blindToggleEl = document.getElementById('blind-toggle');
+const blindIconEye  = document.getElementById('blind-icon-eye');
+const blindIconOff  = document.getElementById('blind-icon-off');
+
+blindToggleEl.addEventListener('click', () => {
+  const active = canvas.toggleBlindMode();
+  blindToggleEl.classList.toggle('active', active);
+  blindIconEye.style.display = active ? 'none'  : '';
+  blindIconOff.style.display = active ? ''      : 'none';
+});
+
 // ─── Edit mode toggle ──────────────────────────────────────────────────────────
 
 const editToggleEl = document.getElementById('edit-toggle');
