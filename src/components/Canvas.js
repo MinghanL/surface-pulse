@@ -36,8 +36,11 @@ export class Canvas {
     this._el  = el;           // 画布 DOM 元素
     this._ble = bluetooth;    // 蓝牙管理器
 
-    // 当前画布上所有贴纸的数组（MaterialSticker 实例列表）
+    // All stickers currently on the canvas
     this._stickers = [];
+
+    // Edit mode — when false, stickers are locked (no drag / resize)
+    this._editMode = false;
 
     // 上次发送的材质 ID（备用，目前用于调试）
     this._lastMat = null;
@@ -83,7 +86,10 @@ export class Canvas {
     // 把贴纸的 DOM 元素插入画布
     this._el.appendChild(sticker.el);
 
-    // 把贴纸加入管理数组
+    // Apply current edit mode so new stickers are immediately interactive if unlocked
+    sticker.setEditMode(this._editMode);
+
+    // Add sticker to tracking array
     this._stickers.push(sticker);
 
     // 通知 TouchDetector 更新贴纸列表（命中检测需要知道所有贴纸位置）
@@ -152,6 +158,16 @@ export class Canvas {
       // 百分比 × 实际尺寸 = 实际像素坐标
       this.addSticker(materialId, xPct * W, yPct * H);
     });
+  }
+
+  /**
+   * Toggle edit mode on/off.
+   * Returns the new state (true = edit on).
+   */
+  toggleEditMode() {
+    this._editMode = !this._editMode;
+    this._stickers.forEach((s) => s.setEditMode(this._editMode));
+    return this._editMode;
   }
 
   // ─── 触摸/鼠标事件处理 ────────────────────────────────────────────────────

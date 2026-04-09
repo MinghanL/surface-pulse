@@ -80,6 +80,16 @@ ble.onStatusChange((status) => {
  * async/await：connect() 和 disconnect() 是异步操作（需要等待蓝牙响应），
  * 用 await 等待它们完成。
  */
+// ─── Edit mode toggle ──────────────────────────────────────────────────────────
+
+const editToggleEl = document.getElementById('edit-toggle');
+editToggleEl.addEventListener('click', () => {
+  const active = canvas.toggleEditMode();
+  editToggleEl.classList.toggle('active', active);
+});
+
+// ─── BLE button ────────────────────────────────────────────────────────────────
+
 bleStatusEl.addEventListener('click', async () => {
   if (ble.isConnected) {
     // 当前已连接 → 点击后断开
