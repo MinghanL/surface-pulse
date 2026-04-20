@@ -28,7 +28,7 @@ export const MATERIALS = [
   {
     id:    'wood',
     label: 'Wood',
-    image: 'materials/wood.jpg',
+    image: 'materials/wood.png',
     color: '#B8865A',
     size:  100,
   },
