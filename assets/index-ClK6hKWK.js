@@ -8,11 +8,6 @@ Please use:
         <div class="palette-circle" ${i}></div>
         <span class="palette-name">${t.label}</span>
       `,this._bindPaletteItemDrag(e,t),this._palette.appendChild(e)})}_bindPaletteItemDrag(t,e){t.addEventListener("touchstart",i=>{i.preventDefault();const s=i.touches[0];this._startGhost(e,s.clientX,s.clientY)},{passive:!1}),t.addEventListener("touchmove",i=>{i.preventDefault();const s=i.touches[0];this._moveGhost(s.clientX,s.clientY)},{passive:!1}),t.addEventListener("touchend",i=>{i.preventDefault();const s=i.changedTouches[0];this._dropGhost(e,s.clientX,s.clientY)},{passive:!1}),t.addEventListener("mousedown",i=>{i.preventDefault(),this._startGhost(e,i.clientX,i.clientY);const s=o=>this._moveGhost(o.clientX,o.clientY),n=o=>{document.removeEventListener("mousemove",s),document.removeEventListener("mouseup",n),this._dropGhost(e,o.clientX,o.clientY)};document.addEventListener("mousemove",s),document.addEventListener("mouseup",n)})}_startGhost(t,e,i){const s=document.createElement("div");s.className="drag-ghost",t.image&&(s.style.backgroundImage=`url("${f}${t.image}")`),s.style.left=`${e-40}px`,s.style.top=`${i-40}px`,document.body.appendChild(s),this._ghost=s,this.close()}_moveGhost(t,e){this._ghost&&(this._ghost.style.left=`${t-40}px`,this._ghost.style.top=`${e-40}px`)}_dropGhost(t,e,i){this._ghost&&(this._ghost.remove(),this._ghost=null);const n=document.getElementById("canvas").getBoundingClientRect(),o=e-n.left,l=i-n.top;o>=0&&l>=0&&o<=n.width&&l<=n.height&&this._canvas.addSticker(t.id,o,l)}_buildTemplates(){x.forEach(t=>{const e=document.createElement("div");e.className="template-card",e.innerHTML=`
-        <div class="template-preview">
-          ${t.stickers.slice(0,4).map(i=>`
-            <div class="template-dot mat-${i.materialId}"></div>
-          `).join("")}
-        </div>
         <div class="template-info">
           <div class="template-name">${t.name}</div>
           <div class="template-desc">${t.description}</div>
