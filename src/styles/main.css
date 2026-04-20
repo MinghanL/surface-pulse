@@ -63,14 +63,6 @@
   /* Shared transition (0.3s ease-in-out curve) */
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Representative color per material */
-  --mat-glass:  #7BAFC4;
-  --mat-wood:   #B8865A;
-  --mat-metal:  #8A9BB0;
-  --mat-rubber: #6A9E78;
-  --mat-fabric: #B87EA8;
-  --mat-stone:  #9B8E85;
-  --mat-sand:   #D4B483;
 }
 
 html, body {
@@ -246,15 +238,18 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
+  justify-content: flex-end;
+  padding-bottom: 12px;
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
+  /* Image background — border-radius clips it naturally, no overflow:hidden needed */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   box-shadow:
     0 8px 32px rgba(100,70,30,0.18),
-    0 0 0 1px rgba(201,169,110,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.45);
+    0 0 0 1px rgba(201,169,110,0.25);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   transform-origin: center;
 }
@@ -285,18 +280,20 @@ html, body {
   transform: scale(1.08);
 }
 
-.sticker-icon {
-  font-size: 28px;
-  line-height: 1;
-}
-
 .sticker-label {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: rgba(255,255,255,0.9);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  color: rgba(255,255,255,0.95);
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 2px 7px;
+  border-radius: 8px;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .sticker-delete {
@@ -463,16 +460,14 @@ html, body {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--surface2); /* fallback if image missing */
   box-shadow:
     0 4px 16px rgba(100,70,30,0.15),
     0 0 0 1px rgba(201,169,110,0.2),
     inset 0 1px 0 rgba(255,255,255,0.45);
-  position: relative;
-  overflow: hidden;
 }
 
 .palette-name {
@@ -608,14 +603,7 @@ html, body {
   white-space: nowrap;
 }
 
-/* ===== Material Color Themes ===== */
-.mat-glass  { background: radial-gradient(circle at 35% 35%, rgba(168,216,234,0.9), rgba(100,180,220,0.7)); }
-.mat-wood   { background: radial-gradient(circle at 35% 35%, rgba(200,169,110,0.95), rgba(150,100,50,0.8)); }
-.mat-metal  { background: radial-gradient(circle at 35% 35%, rgba(180,196,216,0.9), rgba(100,120,150,0.7)); }
-.mat-rubber { background: radial-gradient(circle at 35% 35%, rgba(106,158,120,0.9), rgba(60,110,75,0.8)); }
-.mat-fabric { background: radial-gradient(circle at 35% 35%, rgba(196,126,176,0.9), rgba(140,70,130,0.7)); }
-.mat-stone  { background: radial-gradient(circle at 35% 35%, rgba(155,142,133,0.9), rgba(100,90,82,0.8)); }
-.mat-sand   { background: radial-gradient(circle at 35% 35%, rgba(232,210,160,0.95), rgba(192,158,90,0.85)); }
+/* Material color themes removed — colors are now driven by materials.js */
 
 /* ===== Scrollbar ===== */
 #material-drawer::-webkit-scrollbar { width: 4px; }
@@ -695,14 +683,13 @@ html, body {
 
 /* ===== Blind mode — stickers become opaque black discs ===== */
 .material-sticker.blind-mode {
-  background: #111 !important;
+  background-image: none !important;
+  background-color: #111 !important;
   box-shadow:
     0 8px 32px rgba(0,0,0,0.22),
-    0 0 0 1px rgba(0,0,0,0.12),
-    inset 0 1px 0 rgba(255,255,255,0.04) !important;
+    0 0 0 1px rgba(0,0,0,0.12) !important;
 }
 
-.material-sticker.blind-mode .sticker-icon,
 .material-sticker.blind-mode .sticker-label {
   opacity: 0;
 }
@@ -854,15 +841,7 @@ html, body {
   min-width: 60px;
 }
 
-/* Per-material color for the material field */
-#mon-material[data-mat="glass"]  { color: #a8d8ea; }
-#mon-material[data-mat="wood"]   { color: #c8a96e; }
-#mon-material[data-mat="metal"]  { color: #8a9bb0; }
-#mon-material[data-mat="rubber"] { color: #6a9e78; }
-#mon-material[data-mat="fabric"] { color: #c47eb0; }
-#mon-material[data-mat="stone"]  { color: #9b8e85; }
-#mon-material[data-mat="sand"]   { color: #D4B483; }
-#mon-material[data-mat="none"]   { color: var(--text-muted); }
+/* Material field color is set inline by DataMonitor from materials.js */
 
 .monitor-field-unit {
   font-size: 10px;
@@ -932,14 +911,7 @@ html, body {
   flex-shrink: 0;
 }
 
-.log-dot.mat-glass  { background: #a8d8ea; }
-.log-dot.mat-wood   { background: #c8a96e; }
-.log-dot.mat-metal  { background: #8a9bb0; }
-.log-dot.mat-rubber { background: #6a9e78; }
-.log-dot.mat-fabric { background: #c47eb0; }
-.log-dot.mat-stone  { background: #9b8e85; }
-.log-dot.mat-sand   { background: #D4B483; }
-.log-dot.mat-none   { background: var(--text-muted); }
+/* Log dot color is set inline by DataMonitor from materials.js */
 
 .log-mat  { color: var(--text); font-weight: 600; min-width: 36px; }
 .log-area { flex: 1; }

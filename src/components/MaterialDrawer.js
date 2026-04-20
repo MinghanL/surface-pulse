@@ -23,6 +23,8 @@
 import { MATERIALS } from '../data/materials.js';
 import { TEMPLATES } from '../data/templates.js';
 
+const BASE = import.meta.env.BASE_URL;
+
 export class MaterialDrawer {
   /**
    * 构造函数
@@ -99,11 +101,12 @@ export class MaterialDrawer {
       item.setAttribute('draggable', 'true'); // 标记为可拖拽（辅助属性）
       item.dataset.materialId = mat.id;       // 记录材质 ID
 
-      // 内部结构：圆形 + 名称
+      const imgStyle = mat.image
+        ? `style="background-image:url('${BASE}${mat.image}')"`
+        : '';
+
       item.innerHTML = `
-        <div class="palette-circle ${mat.cssClass}">
-          <span>${mat.icon}</span>
-        </div>
+        <div class="palette-circle" ${imgStyle}></div>
         <span class="palette-name">${mat.label}</span>
       `;
 
@@ -180,9 +183,10 @@ export class MaterialDrawer {
   _startGhost(mat, x, y) {
     const ghost = document.createElement('div');
 
-    // drag-ghost 类在 main.css 里定义：固定定位、圆形、半透明、较大尺寸
-    ghost.className = `drag-ghost ${mat.cssClass}`;
-    ghost.textContent = mat.icon; // 显示材质图标
+    ghost.className = 'drag-ghost';
+    if (mat.image) {
+      ghost.style.backgroundImage = `url("${BASE}${mat.image}")`;
+    }
 
     // 幽灵以自身中心对准手指（幽灵宽高 80px，所以减去 40）
     ghost.style.left = `${x - 40}px`;

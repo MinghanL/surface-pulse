@@ -1,27 +1,22 @@
 /**
  * ============================================================
- * 文件：templates.js
- * 作用：定义预设的材质模板
+ * templates.js — Template registry (the only file you need to edit)
  * ============================================================
  *
- * 模板（Template）就是提前摆好材质贴纸的布局方案。
- * 用户可以在材质库抽屉里点击模板，一键把多个贴纸摆放到画布上，
- * 不需要手动一个个拖拽，方便快速测试。
+ * To add a new template:
+ *   1. Add one object to TEMPLATES below
+ *   2. Done — it appears in the drawer automatically
  *
- * 每个模板包含：
- *   id          — 模板的唯一 ID
- *   name        — 模板名称（显示在抽屉里）
- *   description — 简短说明（包含哪些材质）
- *   stickers    — 贴纸列表，每个贴纸包含：
- *     materialId — 材质 ID（对应 materials.js 里的 id 字段）
- *     xPct       — 贴纸中心的横向位置，用百分比表示（0.0 = 最左, 1.0 = 最右）
- *     yPct       — 贴纸中心的纵向位置，用百分比表示（0.0 = 最顶, 1.0 = 最底）
+ * Fields:
+ *   id          — unique key
+ *   name        — display name shown in the drawer
+ *   description — short subtitle (e.g. list of materials used)
+ *   stickers    — array of sticker placements:
+ *     materialId — must match an id in materials.js
+ *     xPct       — horizontal center, 0.0 (left) → 1.0 (right)
+ *     yPct       — vertical center,   0.0 (top)  → 1.0 (bottom)
  *
- * 为什么用百分比而不是固定像素？
- *   因为手机屏幕大小不同（iPhone SE vs iPad Pro），
- *   用百分比可以让贴纸在任何屏幕上都按比例分布，不会跑偏。
- *   实际坐标在 Canvas.js 的 loadTemplate() 里换算：
- *     实际 x = xPct × 画布宽度（px）
+ * Percentages are used so layouts scale correctly across screen sizes.
  * ============================================================
  */
 

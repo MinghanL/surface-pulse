@@ -17,6 +17,8 @@
  * ============================================================
  */
 
+import { getMaterial } from '../data/materials.js';
+
 export class DataMonitor {
   constructor() {
     // ── 获取 DOM 元素 ────────────────────────────────────────────────────
@@ -85,13 +87,9 @@ export class DataMonitor {
    */
   record(materialId, area) {
     // ── 更新当前状态字段 ──────────────────────────────────────────────────
-    const matLabels = {
-      glass: 'Glass', wood: 'Wood', metal: 'Metal',
-      rubber: 'Rubber', fabric: 'Fabric', stone: 'Stone', none: 'None',
-    };
-
-    this._elMaterial.textContent = matLabels[materialId] ?? materialId;
-    this._elMaterial.setAttribute('data-mat', materialId);
+    const mat = getMaterial(materialId);
+    this._elMaterial.textContent = mat?.label ?? (materialId === 'none' ? 'None' : materialId);
+    this._elMaterial.style.color = mat?.color ?? '';
 
     this._elArea.textContent = area > 0 ? Math.round(area).toLocaleString() : '0';
 
@@ -207,11 +205,7 @@ export class DataMonitor {
    * 格式：● 玻璃   314 px²   12:34:56
    */
   _addLogEntry(materialId, area) {
-    const matLabels = {
-      glass: 'Glass', wood: 'Wood', metal: 'Metal',
-      rubber: 'Rubber', fabric: 'Fabric', stone: 'Stone',
-    };
-
+    const mat  = getMaterial(materialId);
     const now  = new Date();
     const time = [now.getHours(), now.getMinutes(), now.getSeconds()]
       .map((n) => String(n).padStart(2, '0'))
@@ -220,8 +214,8 @@ export class DataMonitor {
     const entry = document.createElement('div');
     entry.className = 'monitor-log-entry';
     entry.innerHTML = `
-      <span class="log-dot mat-${materialId}"></span>
-      <span class="log-mat">${matLabels[materialId] ?? materialId}</span>
+      <span class="log-dot" style="background:${mat?.color ?? 'var(--text-muted)'}"></span>
+      <span class="log-mat">${mat?.label ?? materialId}</span>
       <span class="log-area">${Math.round(area).toLocaleString()} px²</span>
       <span class="log-time">${time}</span>
     `;

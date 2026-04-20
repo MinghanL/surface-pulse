@@ -1,91 +1,78 @@
 /**
  * ============================================================
- * 文件：materials.js
- * 作用：定义所有可用材质的数据
+ * materials.js — Material registry (the only file you need to edit)
  * ============================================================
  *
- * 这个文件就是一个"材质数据库"，列出了网站支持的所有材质种类。
- * 每种材质是一个对象（Object），包含以下字段：
+ * To add a new material:
+ *   1. Put the image in  public/materials/<name>.jpg  (or png/webp)
+ *   2. Add one object to MATERIALS below
+ *   3. Done — it appears in the drawer automatically
  *
- *   id       — 材质的唯一英文标识符，发送给蓝牙/MCU 时用这个
- *   label    — 材质的中文名称，显示在界面上
- *   icon     — Emoji 图标，显示在圆形贴纸中间
- *   cssClass — CSS 样式类名，决定贴纸的颜色和外观（在 main.css 里定义）
- *   size     — 贴纸的默认直径（单位：像素）
- *
- * 如果想增加新材质，只需在 MATERIALS 数组里加一个对象，
- * 并在 main.css 里加对应的 .mat-xxx 样式即可。
+ * Fields:
+ *   id     — unique key sent over BLE and used by templates
+ *   label  — display name shown on the sticker and in the monitor
+ *   image  — path relative to public/ (e.g. 'materials/glass.jpg')
+ *   color  — representative hex color used for log dots and monitor text
+ *   size   — default sticker diameter in px (min size for pinch-resize)
  * ============================================================
  */
 
-/**
- * 所有材质的定义列表
- * 这个数组会被 MaterialDrawer.js 读取，生成材质库面板里的圆形贴纸。
- */
 export const MATERIALS = [
   {
-    id: 'glass',        // 英文 ID，蓝牙发送时使用
-    label: 'Glass',      // 界面显示名
-    icon: '🪟',         // 贴纸中心的 Emoji
-    cssClass: 'mat-glass', // 对应 main.css 里的 .mat-glass 样式（蓝绿色渐变）
-    size: 100,          // 贴纸直径 100px
+    id:    'glass',
+    label: 'Glass',
+    image: 'materials/glass.jpg',
+    color: '#7BAFC4',
+    size:  100,
   },
   {
-    id: 'wood',
+    id:    'wood',
     label: 'Wood',
-    icon: '🪵',
-    cssClass: 'mat-wood',  // 棕色木纹渐变
-    size: 100,
+    image: 'materials/wood.jpg',
+    color: '#B8865A',
+    size:  100,
   },
   {
-    id: 'metal',
+    id:    'metal',
     label: 'Metal',
-    icon: '⚙️',
-    cssClass: 'mat-metal', // 冷色金属渐变
-    size: 100,
+    image: 'materials/metal.jpg',
+    color: '#8A9BB0',
+    size:  100,
   },
   {
-    id: 'rubber',
+    id:    'rubber',
     label: 'Rubber',
-    icon: '⭕',
-    cssClass: 'mat-rubber', // 绿色橡胶渐变
-    size: 100,
+    image: 'materials/rubber.jpg',
+    color: '#6A9E78',
+    size:  100,
   },
   {
-    id: 'fabric',
+    id:    'fabric',
     label: 'Fabric',
-    icon: '🧶',
-    cssClass: 'mat-fabric', // 紫粉色布料渐变
-    size: 100,
+    image: 'materials/fabric.jpg',
+    color: '#B87EA8',
+    size:  100,
   },
   {
-    id: 'stone',
+    id:    'stone',
     label: 'Stone',
-    icon: '🪨',
-    cssClass: 'mat-stone',  // 灰色石头渐变
-    size: 100,
+    image: 'materials/stone.jpg',
+    color: '#9B8E85',
+    size:  100,
   },
   {
-    id: 'sand',
+    id:    'sand',
     label: 'Sand',
-    icon: '🏖️',
-    cssClass: 'mat-sand',  // 
-    size: 100,
+    image: 'materials/sand.jpg',
+    color: '#D4B483',
+    size:  100,
   },
 ];
 
 /**
- * 根据 ID 查找材质对象
- *
- * 使用示例：
- *   const mat = getMaterial('glass');
- *   console.log(mat.label); // 输出 "玻璃"
- *
- * Array.find()：遍历数组，返回第一个满足条件的元素。
- * ?? null：如果 find 返回 undefined（没找到），改为返回 null。
- *
- * @param {string} id  材质 ID，例如 "glass"
- * @returns {Object|null}  找到的材质对象，或 null
+ * Look up a material by id. Returns null if not found.
+ * @param {string} id
+ * @returns {Object|null}
  */
 export function getMaterial(id) {
   return MATERIALS.find((m) => m.id === id) ?? null;
