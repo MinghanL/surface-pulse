@@ -320,8 +320,16 @@ html, body {
   background: rgba(255,107,107,0.15);
 }
 
+/* Desktop: show on hover */
 .material-sticker.edit-mode:hover .sticker-delete {
   display: flex;
+}
+
+/* Touch: no hover exists, always show delete button in edit mode */
+@media (pointer: coarse) {
+  .material-sticker.edit-mode .sticker-delete {
+    display: flex;
+  }
 }
 
 /* ===== Material Sizes ===== */

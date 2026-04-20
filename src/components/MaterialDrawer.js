@@ -259,11 +259,6 @@ export class MaterialDrawer {
       //   左边：小圆点预览（显示模板包含哪些材质颜色）
       //   右边：模板名称 + 描述
       card.innerHTML = `
-        <div class="template-preview">
-          ${tpl.stickers.slice(0, 4).map((s) => `
-            <div class="template-dot mat-${s.materialId}"></div>
-          `).join('')}
-        </div>
         <div class="template-info">
           <div class="template-name">${tpl.name}</div>
           <div class="template-desc">${tpl.description}</div>
